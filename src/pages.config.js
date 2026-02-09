@@ -47,37 +47,37 @@
  *
  * The mainPage value must match a key in the PAGES object exactly.
  */
-import Dashboard from './pages/Dashboard';
-import Profile from './pages/Profile';
-import Chat from './pages/Chat';
-import Search from './pages/Search';
-import Ratings from './pages/Ratings';
-import MyDashboard from './pages/MyDashboard';
-import PrivacyPolicy from './pages/PrivacyPolicy';
-import TermsOfService from './pages/TermsOfService';
 import AccessibilityStatement from './pages/AccessibilityStatement';
-import Home from './pages/Home';
 import AdminPanel from './pages/AdminPanel';
 import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
+import Chat from './pages/Chat';
+import Dashboard from './pages/Dashboard';
+import Home from './pages/Home';
+import MyDashboard from './pages/MyDashboard';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import Profile from './pages/Profile';
+import Ratings from './pages/Ratings';
+import Search from './pages/Search';
+import TermsOfService from './pages/TermsOfService';
 import dashboard from './pages/dashboard';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
-    "Dashboard": Dashboard,
-    "Profile": Profile,
-    "Chat": Chat,
-    "Search": Search,
-    "Ratings": Ratings,
-    "MyDashboard": MyDashboard,
-    "PrivacyPolicy": PrivacyPolicy,
-    "TermsOfService": TermsOfService,
     "AccessibilityStatement": AccessibilityStatement,
-    "Home": Home,
     "AdminPanel": AdminPanel,
     "Blog": Blog,
     "BlogPost": BlogPost,
+    "Chat": Chat,
+    "Dashboard": Dashboard,
+    "Home": Home,
+    "MyDashboard": MyDashboard,
+    "PrivacyPolicy": PrivacyPolicy,
+    "Profile": Profile,
+    "Ratings": Ratings,
+    "Search": Search,
+    "TermsOfService": TermsOfService,
     "dashboard": dashboard,
 }
 

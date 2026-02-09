@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { User } from '@/entities/User';
 import { Match } from '@/entities/Match';
@@ -12,7 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Users, MessageSquare, Star, AlertTriangle, RefreshCw, Heart, Bug, TrendingUp, Activity, BarChart3, UserCheck, PieChart as PieChartIcon } from 'lucide-react';
+import { Users, MessageSquare, Star, AlertTriangle, RefreshCw, Heart, Bug, TrendingUp, Activity, BarChart3, UserCheck, PieChart as PieChartIcon, Download } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { format } from 'date-fns';
 import { he } from 'date-fns/locale';
@@ -382,6 +381,39 @@ export default function AdminPanel() {
 
     const analyticsStats = getAnalyticsStats();
 
+    const exportUsersToExcel = () => {
+        // Create CSV content
+        const headers = ['שם מלא', 'אימייל', 'עיר', 'גיל', 'טלפון', 'תאריך הצטרפות', 'תאריך עדכון אחרון', 'תפקיד', 'שירותים מוצעים', 'שירותים מבוקשים'];
+        const csvContent = [
+            headers.join(','),
+            ...users.map(user => [
+                user.full_name || '',
+                user.email || '',
+                user.location || '',
+                user.age || '',
+                user.phone || '',
+                user.created_date ? format(new Date(user.created_date), 'dd/MM/yyyy HH:mm', { locale: he }) : '',
+                user.updated_date ? format(new Date(user.updated_date), 'dd/MM/yyyy HH:mm', { locale: he }) : '',
+                user.role || 'user',
+                user.services_offered ? user.services_offered.join('; ') : '',
+                user.services_wanted ? user.services_wanted.join('; ') : ''
+            ].map(field => `"${field}"`).join(','))
+        ].join('\n');
+
+        // Add BOM for proper Hebrew encoding in Excel
+        const BOM = '\uFEFF';
+        const blob = new Blob([BOM + csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        
+        link.setAttribute('href', url);
+        link.setAttribute('download', `users_export_${format(new Date(), 'dd-MM-yyyy_HH-mm')}.csv`);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
     if (isLoading && !users.length) { // Show initial loader only if no data is present yet
         return (
             <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black flex items-center justify-center">
@@ -618,10 +650,20 @@ export default function AdminPanel() {
                         {activeTab === 'all-users' && (
                             <Card className="bg-gray-800/50 border-gray-700 text-white">
                                 <CardHeader>
-                                    <CardTitle className="flex items-center gap-2">
-                                        <UserCheck className="w-5 h-5" />
-                                        כל המשתמשים ({users.length})
-                                    </CardTitle>
+                                    <div className="flex items-center justify-between">
+                                        <CardTitle className="flex items-center gap-2">
+                                            <UserCheck className="w-5 h-5" />
+                                            כל המשתמשים ({users.length})
+                                        </CardTitle>
+                                        <Button
+                                            onClick={exportUsersToExcel}
+                                            className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white"
+                                            disabled={users.length === 0}
+                                        >
+                                            <Download className="w-4 h-4 mr-2" />
+                                            ייצא לאקסל
+                                        </Button>
+                                    </div>
                                 </CardHeader>
                                 <CardContent>
                                     {loadError ? (

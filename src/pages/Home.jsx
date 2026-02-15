@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { User } from '@/entities/User';
 import { Button } from '@/components/ui/button';
@@ -123,7 +122,7 @@ const FaqSection = () => {
             answer: "פשוט מאוד! אתם יוצרים פרופיל, מציגים את השירותים והמוצרים שאתם מציעים, ומציינים מה אתם מחפשים בתמורה. המערכת שלנו תציג לכם פרופילים רלוונטיים, ותוכלו להתחיל ליצור קשרים ולהחליף ערך."
         },
         {
-            question: "האם השימוש ב-Barter4U עולה כסף?",
+            question: "האם השימוש ב-BARTERIM עולה כסף?",
             answer: "לא! השימוש הבסיסי בפלטפורמה הוא בחינם. אנו מאמינים בכלכלת שיתוף אמיתית, שבה הערך נוצר מהכישרונות והנכסים של חברי הקהילה."
         },
         {
@@ -230,8 +229,7 @@ export default function HomePage() {
   }, []);
 
   const openAuthModal = (mode = 'login') => {
-    setAuthMode(mode);
-    setShowAuthModal(true);
+    window.location.href = 'https://app.barterim.com/';
   }
 
   return (
@@ -242,13 +240,13 @@ export default function HomePage() {
                 <div className="flex justify-between items-center py-4">
                     <div className="flex items-center gap-3">
                         <img 
-                            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/2139342b6_barter4u.png" 
-                            alt="Barter4U Logo" 
+                            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/barterim-logo.png" 
+                            alt="BARTERIM Logo" 
                             className="w-10 h-10 md:w-12 md:h-12 object-contain cursor-pointer"
                             onClick={() => window.location.href = createPageUrl("Home")}
                         />
                         <div className="hidden sm:block">
-                            <h1 className="text-lg md:text-xl font-bold gradient-text">Barter4U</h1>
+                            <h1 className="text-lg md:text-xl font-bold gradient-text">BARTERIM</h1>
                             <p className="text-xs text-gray-500">Give Value, Get Value</p>
                         </div>
                     </div>
@@ -292,13 +290,13 @@ export default function HomePage() {
                     transition={{ duration: 0.8 }}
                 >
                     <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold mb-3 md:mb-4 leading-tight font-rubik">
-                        Barter4U - העולם החדש של החלפת שירותים 
+                        BARTERIM - העולם החדש של החלפת שירותים 
                     </h1>
                     <div className="text-base md:text-lg text-white/95 mb-6 md:mb-8 space-y-2 md:space-y-3">
                         <p className="font-semibold">מחליפים ערך בערך</p>
                         <p>תן שירות. קבל שירות. בונים קהילה של שפע הדדי.</p>
                         <p className="text-sm md:text-base">
-                            ברוכים הבאים ל-Barter4U – הפלטפורמה שמחברת בין אנשים אמיתיים לשיתופי פעולה אמיתיים.<br/>
+                            ברוכים הבאים ל-BARTERIM – הפלטפורמה שמחברת בין אנשים אמיתיים לשיתופי פעולה אמיתיים.<br/>
                             כאן לא צריך כסף – רק כישרון, זמן ורצון טוב.<br/>
                             הצטרף למהפכת הברטרים הדיגיטלית והתחל ליהנות ממה שיש לעולם להציע – פשוט כי גם לך יש מה להציע.
                         </p>
@@ -338,7 +336,7 @@ export default function HomePage() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            למה Barter4U?
+            למה BARTERIM?
           </motion.h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
             <motion.div
@@ -438,7 +436,7 @@ export default function HomePage() {
                   >
                       <h2 className="text-2xl md:text-3xl font-bold mb-4">הסיפור שלנו</h2>
                       <p className="text-gray-700 text-sm md:text-base">
-                          Barter4U נולד מתוך אמונה פשוטה: לכל אחד מאיתנו יש ערך ייחודי להציע. בעולם שבו הכל נמדד בכסף, רצינו ליצור מרחב שבו כישרון, זמן ורצון טוב הם המטבע האמיתי. אנחנו מאמינים בכוחה של קהילה, בשיתוף פעולה ובכלכלה מעגלית שבה כולנו יכולים לצמוח יחד.
+                          BARTERIM נולד מתוך אמונה פשוטה: לכל אחד מאיתנו יש ערך ייחודי להציע. בעולם שבו הכל נמדד בכסף, רצינו ליצור מרחב שבו כישרון, זמן ורצון טוב הם המטבע האמיתי. אנחנו מאמינים בכוחה של קהילה, בשיתוף פעולה ובכלכלה מעגלית שבה כולנו יכולים לצמוח יחד.
                       </p>
                       <p className="text-gray-700 text-sm md:text-base">
                           המשימה שלנו היא לחבר בין אנשים, לאפשר החלפות הוגנות וליצור הזדמנויות חדשות לכולם – מעצמאים בתחילת דרכם, דרך בעלי עסקים ותיקים ועד לאנשים פרטיים עם תחביבים וכישורים.
@@ -469,7 +467,7 @@ export default function HomePage() {
           </motion.h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             {[
-              { quote: "החלפתי שיעור גיטרה בעיצוב לוגו לעסק שלי דרך Barter4U. חוויה מדהימה וחסכתי מאות שקלים!", name: "דניאל לוי", service: "קיבל עיצוב לוגו", image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&h=200&auto=format&fit=crop" },
+              { quote: "החלפתי שיעור גיטרה בעיצוב לוגו לעסק שלי דרך BARTERIM. חוויה מדהימה וחסכתי מאות שקלים!", name: "דניאל לוי", service: "קיבל עיצוב לוגו", image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&h=200&auto=format&fit=crop" },
               { quote: "מצאתי מישהי שתעזור לי עם הגינה בתמורה לכמה צנצנות ריבה ביתית. כיף גדול!", name: "יעל כהן", service: "קיבלה עזרה בגינה", image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=200&h=200&auto=format&fit=crop" },
               { quote: "הפלטפורמה נוחה וקלה לשימוש. הכרתי אנשים מקסימים ומוכשרים מהאזור שלי.", name: "אמיר חסן", service: "החליף תיקון מחשב", image: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=200&h=200&auto=format&fit=crop" }
             ].map((testimonial, index) => (
@@ -576,7 +574,7 @@ export default function HomePage() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            Barter4U
+            BARTERIM
           </motion.p>
           <motion.div 
             className="flex justify-center gap-4 md:gap-6 mb-4"
@@ -624,18 +622,12 @@ export default function HomePage() {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.6 }}
           >
-            &copy; {new Date().getFullYear()} Barter4U. כל הזכויות שמורות.
+            &copy; {new Date().getFullYear()} BARTERIM. כל הזכויות שמורות.
           </motion.p>
         </div>
       </footer>
 
-      {/* Auth Modal */}
-      {showAuthModal && (
-        <AuthModal
-          mode={authMode}
-          onClose={() => setShowAuthModal(false)}
-        />
-      )}
+
     </div>
   );
 }

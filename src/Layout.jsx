@@ -36,12 +36,12 @@ const WelcomePopup = ({ isVisible, onClose, userName }) => {
             className="bg-white rounded-xl p-6 max-w-md w-full text-center"
           >
             <img 
-              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/2139342b7_barter4u.png" 
-              alt="Barter4U Logo" 
+              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/barterim-logo.png" 
+              alt="BARTERIM Logo" 
               className="w-20 h-20 mx-auto mb-4"
             />
             <h3 className="text-2xl font-bold gradient-text mb-2">
-              ברוכים הבאים ל-Barter4U!
+              ברוכים הבאים ל-BARTERIM!
             </h3>
             {userName && (
               <p className="text-xl text-gray-700 mb-4">
@@ -336,13 +336,13 @@ export default function Layout({ children, currentPageName }) {
                 transition={{ type: "spring", stiffness: 300 }}
               >
                 <img 
-                  src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/2139342b7_barter4u.png" 
-                  alt="Barter4U Logo" 
+                  src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/barterim-logo.png" 
+                  alt="BARTERIM Logo" 
                   className="w-full h-full object-contain"
                 />
               </motion.div>
               <div className="hidden md:block">
-                <h1 className="text-lg md:text-xl font-bold gradient-text">Barter4U</h1>
+                <h1 className="text-lg md:text-xl font-bold gradient-text">BARTERIM</h1>
                 <p className="text-xs text-gray-500">Give Value, Get Value</p>
               </div>
             </div>

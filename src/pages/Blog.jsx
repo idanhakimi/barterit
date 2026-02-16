@@ -14,10 +14,13 @@ const BlogHeader = () => (
             <div className="flex justify-between items-center py-4">
                 <Link to={createPageUrl("Home")} className="flex items-center gap-3">
                     <img 
-                        src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/2139342b7_barter4u.png" 
-                        alt="Barter4U Logo" 
+                        src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/barterim-logo.png" 
+                        alt="BARTERIM Logo" 
                         className="w-10 h-10 object-contain"
                     />
+                    <div>
+                        <h1 className="text-lg font-bold gradient-text">BARTERIM</h1>
+                    </div>
                 </Link>
                 <nav className="flex items-center gap-8">
                     <Link to={createPageUrl("Home")} className="text-gray-600 hover:text-orange-500 transition-colors duration-300 font-medium">חזרה לאתר הראשי</Link>
@@ -30,6 +33,15 @@ const BlogHeader = () => (
 export default function Blog() {
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredPosts, setFilteredPosts] = useState(blogData);
+
+    // SEO: Update document title and meta for blog page
+    useEffect(() => {
+        document.title = 'בלוג BARTERIM - מדריכים וטיפים לברטרים וחילופי שירותים בישראל';
+        const metaDesc = document.querySelector('meta[name="description"]');
+        if (metaDesc) {
+            metaDesc.setAttribute('content', 'כל מה שצריך לדעת על ברטרים, חילופי שירותים וכלכלת שיתוף. מדריכים, טיפים וסיפורים מעולם הברטרים הדיגיטליים בישראל.');
+        }
+    }, []);
 
     useEffect(() => {
         const lowercasedFilter = searchTerm.toLowerCase();
@@ -49,9 +61,9 @@ export default function Blog() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6 }}
                 >
-                    <h1 className="text-4xl font-bold text-center mb-4">הבלוג של Barter4U</h1>
+                    <h1 className="text-4xl font-bold text-center mb-4">הבלוג של BARTERIM - מדריך ברטרים וחילופי שירותים</h1>
                     <p className="text-center text-gray-600 mb-8 max-w-2xl mx-auto">
-                        כל מה שצריך לדעת על כלכלת שיתוף, ברטרים, ואיך למנף את הכישרונות שלכם.
+                        כל מה שצריך לדעת על כלכלת שיתוף, ברטרים בישראל, חילופי שירותים ואיך למנף את הכישרונות שלכם בברטר.
                     </p>
                     <div className="relative max-w-lg mx-auto mb-12">
                         <Search className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />

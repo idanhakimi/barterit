@@ -213,6 +213,15 @@ export default function HomePage() {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authMode, setAuthMode] = useState('login');
 
+  // SEO: Update document title and meta for home page
+  useEffect(() => {
+    document.title = 'BARTERIM - פלטפורמת ברטרים וחילופי שירותים בישראל | ברטר דיגיטלי';
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) {
+      metaDesc.setAttribute('content', 'הצטרפו ל-BARTERIM - פלטפורמת הברטרים המובילה בישראל. החליפו שירותים ללא כסף, בנו קהילה חזקה וחסכו כסף. ברטר דיגיטלי, חילופי שירותים וכלכלת שיתוף.');
+    }
+  }, []);
+
   // Check if user is logged in and redirect to Dashboard
   useEffect(() => {
     const checkAndRedirect = async () => {

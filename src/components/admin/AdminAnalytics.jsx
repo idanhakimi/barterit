@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
 
-export default function AdminAnalytics({ leads, campaigns }) {
+export default function AdminAnalytics({ leads, campaigns, pageViews = [] }) {
   // Lead status distribution
   const statusData = [
     { name: 'חדש', value: leads.filter(l => l.status === 'new').length, color: '#3b82f6' },
@@ -51,10 +51,41 @@ export default function AdminAnalytics({ leads, campaigns }) {
     ? ((leads.filter(l => l.status === 'converted').length / leads.length) * 100).toFixed(1)
     : 0;
 
+  // Page views stats
+  const totalPageViews = pageViews.length;
+  const uniqueSessions = new Set(pageViews.map(pv => pv.session_id)).size;
+  
+  // Page views over time (last 30 days)
+  const getPageViewsLast30Days = () => {
+    const days = [];
+    for (let i = 29; i >= 0; i--) {
+      const date = new Date();
+      date.setDate(date.getDate() - i);
+      const dateStr = date.toISOString().split('T')[0];
+      const count = pageViews.filter(pv => pv.created_date.startsWith(dateStr)).length;
+      days.push({
+        date: date.toLocaleDateString('he-IL', { day: '2-digit', month: '2-digit' }),
+        views: count
+      });
+    }
+    return days;
+  };
+
+  const pageViewTimelineData = getPageViewsLast30Days();
+
   return (
     <div className="space-y-6">
       {/* Key Metrics */}
-      <div className="grid md:grid-cols-4 gap-4">
+      <div className="grid md:grid-cols-5 gap-4">
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-gray-600">צפיות בדף</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-bold text-teal-600">{totalPageViews}</div>
+            <div className="text-xs text-gray-500 mt-1">{uniqueSessions} סשנים ייחודיים</div>
+          </CardContent>
+        </Card>
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-gray-600">שיעור המרה</CardTitle>
@@ -138,23 +169,42 @@ export default function AdminAnalytics({ leads, campaigns }) {
         </Card>
       </div>
 
-      {/* Timeline Chart */}
-      <Card>
-        <CardHeader>
-          <CardTitle>לידים ב-30 הימים האחרונים</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={timelineData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="date" />
-              <YAxis />
-              <Tooltip />
-              <Line type="monotone" dataKey="leads" stroke="#3b82f6" strokeWidth={2} />
-            </LineChart>
-          </ResponsiveContainer>
-        </CardContent>
-      </Card>
+      {/* Timeline Charts */}
+      <div className="grid md:grid-cols-2 gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>צפיות בדף ב-30 הימים האחרונים</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={pageViewTimelineData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="date" />
+                <YAxis />
+                <Tooltip />
+                <Line type="monotone" dataKey="views" stroke="#14b8a6" strokeWidth={2} />
+              </LineChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>לידים ב-30 הימים האחרונים</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={timelineData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="date" />
+                <YAxis />
+                <Tooltip />
+                <Line type="monotone" dataKey="leads" stroke="#3b82f6" strokeWidth={2} />
+              </LineChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+      </div>
 
       {/* Campaign Performance */}
       <Card>

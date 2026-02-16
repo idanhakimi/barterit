@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { User } from '@/entities/User';
+import { base44 } from '@/api/base44Client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Users, BrainCircuit, TrendingUp, Mail, Facebook, Instagram, Heart, X, Star as StarIcon } from 'lucide-react';
@@ -220,6 +221,32 @@ export default function HomePage() {
     if (metaDesc) {
       metaDesc.setAttribute('content', 'הצטרפו ל-BARTERIM - פלטפורמת הברטרים המובילה בישראל. החליפו שירותים ללא כסף, בנו קהילה חזקה וחסכו כסף. ברטר דיגיטלי, חילופי שירותים וכלכלת שיתוף.');
     }
+  }, []);
+
+  // Track page view
+  useEffect(() => {
+    const trackPageView = async () => {
+      try {
+        // Generate session ID if not exists
+        let sessionId = sessionStorage.getItem('page_session_id');
+        if (!sessionId) {
+          sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+          sessionStorage.setItem('page_session_id', sessionId);
+        }
+
+        // Record page view
+        await base44.entities.PageView.create({
+          page_name: 'Home',
+          user_agent: navigator.userAgent,
+          referrer: document.referrer || 'direct',
+          session_id: sessionId
+        });
+      } catch (error) {
+        console.error('Error tracking page view:', error);
+      }
+    };
+
+    trackPageView();
   }, []);
 
   // Check if user is logged in and redirect to Dashboard

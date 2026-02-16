@@ -173,12 +173,12 @@ const FaqSection = () => {
 };
 
 const FeatureCard = ({ icon, title, description }) => (
-  <div className="text-center p-6 bg-white/50 rounded-xl shadow-lg transform hover:-translate-y-2 transition-transform duration-300">
-    <div className="inline-block p-4 bg-gradient-to-r from-orange-100 to-teal-100 rounded-full mb-4">
+  <div className="text-center p-6 bg-white/50 rounded-xl shadow-lg transform hover:-translate-y-2 transition-transform duration-300 h-full flex flex-col">
+    <div className="inline-block p-4 bg-gradient-to-r from-orange-100 to-teal-100 rounded-full mb-4 mx-auto">
       {React.createElement(icon, { className: "w-8 h-8 text-orange-500" })}
     </div>
     <h3 className="text-xl font-bold mb-2">{title}</h3>
-    <p className="text-gray-600">{description}</p>
+    <p className="text-gray-600 flex-1">{description}</p>
   </div>
 );
 

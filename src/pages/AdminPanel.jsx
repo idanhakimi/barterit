@@ -17,6 +17,8 @@ import { format } from 'date-fns';
 import { he } from 'date-fns/locale';
 import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import DemoUserGenerator from "../components/DemoUserGenerator";
+import MFASetup from "../components/admin/MFASetup";
+import AnalyticsDashboard from "../components/admin/AnalyticsDashboard";
 
 const createPageUrl = (pageName) => {
     if (pageName === 'Home') return '/';
@@ -468,13 +470,14 @@ export default function AdminPanel() {
                 >
                     {[
                         { key: 'dashboard', label: 'דשבורד', icon: BarChart3 },
-                        { key: 'analytics', label: 'ניתוח נתונים', icon: PieChartIcon },
+                        { key: 'analytics', label: 'אנליטיקה', icon: PieChartIcon },
                         { key: 'all-users', label: 'כל המשתמשים', icon: UserCheck, count: users.length },
                         { key: 'matches', label: 'התאמות', icon: Heart, count: matches.length },
                         { key: 'ratings', label: 'דירוגים', icon: Star, count: ratings.length },
                         { key: 'reports', label: 'דיווחים', icon: AlertTriangle, count: reports.length },
                         { key: 'bugs', label: 'באגים', icon: Bug, count: bugReports.length },
                         { key: 'contacts', label: 'פניות', icon: MessageSquare, count: contactSubmissions.length },
+                        { key: 'security', label: 'אבטחה', icon: RefreshCw },
                         { key: 'demo', label: 'מצב הדגמה', icon: Users }
                     ].map((tab) => (
                         <Button
@@ -616,33 +619,42 @@ export default function AdminPanel() {
 
                         {/* Analytics Tab */}
                         {activeTab === 'analytics' && (
-                            <div className="grid md:grid-cols-2 gap-6">
-                                <Card className="bg-gray-800/50 border-gray-700 text-white">
-                                    <CardHeader>
-                                        <CardTitle>התפלגות גילאים</CardTitle>
-                                    </CardHeader>
-                                    <CardContent>
-                                        <AgeDistributionChart users={users} />
-                                    </CardContent>
-                                </Card>
+                            <div className="space-y-6">
+                                <AnalyticsDashboard 
+                                    users={users}
+                                    matches={matches}
+                                    messages={messages}
+                                    ratings={ratings}
+                                />
+                                
+                                <div className="grid md:grid-cols-2 gap-6">
+                                    <Card className="bg-gray-800/50 border-gray-700 text-white">
+                                        <CardHeader>
+                                            <CardTitle>התפלגות גילאים</CardTitle>
+                                        </CardHeader>
+                                        <CardContent>
+                                            <AgeDistributionChart users={users} />
+                                        </CardContent>
+                                    </Card>
 
-                                <Card className="bg-gray-800/50 border-gray-700 text-white">
-                                    <CardHeader>
-                                        <CardTitle>התפלגות גיאוגרפית</CardTitle>
-                                    </CardHeader>
-                                    <CardContent>
-                                        <LocationDistributionChart users={users} />
-                                    </CardContent>
-                                </Card>
+                                    <Card className="bg-gray-800/50 border-gray-700 text-white">
+                                        <CardHeader>
+                                            <CardTitle>התפלגות גיאוגרפית</CardTitle>
+                                        </CardHeader>
+                                        <CardContent>
+                                            <LocationDistributionChart users={users} />
+                                        </CardContent>
+                                    </Card>
 
-                                <Card className="bg-gray-800/50 border-gray-700 text-white md:col-span-2">
-                                    <CardHeader>
-                                        <CardTitle>השירותים הפופולריים ביותר</CardTitle>
-                                    </CardHeader>
-                                    <CardContent>
-                                        <ServicesChart users={users} />
-                                    </CardContent>
-                                </Card>
+                                    <Card className="bg-gray-800/50 border-gray-700 text-white md:col-span-2">
+                                        <CardHeader>
+                                            <CardTitle>השירותים הפופולריים ביותר</CardTitle>
+                                        </CardHeader>
+                                        <CardContent>
+                                            <ServicesChart users={users} />
+                                        </CardContent>
+                                    </Card>
+                                </div>
                             </div>
                         )}
 
@@ -1101,6 +1113,23 @@ export default function AdminPanel() {
                                     )}
                                 </CardContent>
                             </Card>
+                        )}
+
+                        {/* Security Tab */}
+                        {activeTab === 'security' && (
+                            <div className="space-y-6">
+                                <Card className="bg-gray-800/50 border-gray-700">
+                                    <CardHeader>
+                                        <CardTitle className="text-white">הגדרות אבטחה</CardTitle>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <p className="text-gray-300 mb-6">
+                                            כמנהל מערכת, מומלץ להגן על החשבון שלך באימות דו-שלבי (MFA)
+                                        </p>
+                                        <MFASetup user={user} />
+                                    </CardContent>
+                                </Card>
+                            </div>
                         )}
 
                         {/* Demo Tab */}

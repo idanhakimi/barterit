@@ -14,6 +14,7 @@ export default function AdminDashboard() {
   const [leads, setLeads] = useState([]);
   const [campaigns, setCampaigns] = useState([]);
   const [contactSubmissions, setContactSubmissions] = useState([]);
+  const [pageViews, setPageViews] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -30,14 +31,16 @@ export default function AdminDashboard() {
   const loadData = async () => {
     setIsLoading(true);
     try {
-      const [leadsData, campaignsData, contactsData] = await Promise.all([
+      const [leadsData, campaignsData, contactsData, pageViewsData] = await Promise.all([
         base44.entities.Lead.list('-created_date'),
         base44.entities.EmailCampaign.list('-created_date'),
-        base44.entities.ContactSubmission.list('-created_date')
+        base44.entities.ContactSubmission.list('-created_date'),
+        base44.entities.PageView.list('-created_date', 1000)
       ]);
       setLeads(leadsData);
       setCampaigns(campaignsData);
       setContactSubmissions(contactsData);
+      setPageViews(pageViewsData);
     } catch (error) {
       console.error('Error loading data:', error);
     }
@@ -150,7 +153,7 @@ export default function AdminDashboard() {
               </TabsContent>
               
               <TabsContent value="analytics">
-                <AdminAnalytics leads={leads} campaigns={campaigns} />
+                <AdminAnalytics leads={leads} campaigns={campaigns} pageViews={pageViews} />
               </TabsContent>
             </Tabs>
           </CardContent>

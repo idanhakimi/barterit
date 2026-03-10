@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { createPageUrl } from '@/utils';
-import { BarChart3, Users, Mail, TrendingUp, LogOut } from 'lucide-react';
+import { BarChart3, Users, Mail, TrendingUp, Eye } from 'lucide-react';
 import { motion } from 'framer-motion';
 import CRMTable from '../components/admin/CRMTable';
 import EmailCampaignManager from '../components/admin/EmailCampaignManager';
@@ -18,14 +18,19 @@ export default function AdminDashboard() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check authentication
-    const isAdminLoggedIn = sessionStorage.getItem('adminLoggedIn');
-    if (isAdminLoggedIn !== 'true') {
-      window.location.href = createPageUrl('AdminLogin');
-      return;
-    }
-
-    loadData();
+    const checkAuth = async () => {
+      try {
+        const userData = await base44.auth.me();
+        if (userData.role !== 'admin') {
+          window.location.href = createPageUrl('Dashboard');
+          return;
+        }
+        loadData();
+      } catch (e) {
+        base44.auth.redirectToLogin(createPageUrl('AdminDashboard'));
+      }
+    };
+    checkAuth();
   }, []);
 
   const loadData = async () => {
@@ -48,8 +53,7 @@ export default function AdminDashboard() {
   };
 
   const handleLogout = () => {
-    sessionStorage.removeItem('adminLoggedIn');
-    window.location.href = createPageUrl('AdminLogin');
+    base44.auth.logout(createPageUrl('Home'));
   };
 
   if (isLoading) {
@@ -87,7 +91,7 @@ export default function AdminDashboard() {
         </motion.div>
 
         {/* Quick Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
           <Card className="bg-white/10 border-white/20 text-white">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium">סך הכל לידים</CardTitle>
@@ -110,22 +114,31 @@ export default function AdminDashboard() {
           </Card>
           <Card className="bg-white/10 border-white/20 text-white">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">קמפיינים פעילים</CardTitle>
+              <CardTitle className="text-sm font-medium">פניות חדשות</CardTitle>
               <Mail className="w-4 h-4 text-blue-500" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">
-                {campaigns.filter(c => c.status === 'scheduled').length}
+              <div className="text-2xl font-bold text-blue-300">
+                {contactSubmissions.filter(c => c.status === 'new').length}
               </div>
             </CardContent>
           </Card>
           <Card className="bg-white/10 border-white/20 text-white">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">פניות ליצירת קשר</CardTitle>
+              <CardTitle className="text-sm font-medium">קמפיינים</CardTitle>
               <BarChart3 className="w-4 h-4 text-purple-500" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{contactSubmissions.length}</div>
+              <div className="text-2xl font-bold">{campaigns.length}</div>
+            </CardContent>
+          </Card>
+          <Card className="bg-white/10 border-white/20 text-white">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium">צפיות בדף</CardTitle>
+              <Eye className="w-4 h-4 text-teal-500" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-teal-300">{pageViews.length}</div>
             </CardContent>
           </Card>
         </div>

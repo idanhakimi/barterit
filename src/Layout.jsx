@@ -401,7 +401,7 @@ export default function Layout({ children, currentPageName }) {
                         <>
                           <DropdownMenuSeparator />
                           <DropdownMenuItem asChild>
-                            <Link to={createPageUrl("AdminPanel")}>פאנל ניהול</Link>
+                            <Link to={createPageUrl("AdminDashboard")}>פאנל ניהול</Link>
                           </DropdownMenuItem>
                         </>
                       )}

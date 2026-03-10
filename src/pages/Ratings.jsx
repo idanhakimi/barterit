@@ -384,10 +384,12 @@ export default function Ratings() {
                     <Card className="glass-card">
                       <CardContent className="p-4">
                         <div className="flex items-start gap-4">
-                          <div className="w-12 h-12 bg-gradient-to-r from-orange-200 to-teal-200 rounded-full flex items-center justify-center">
-                            <span className="font-semibold text-gray-600">
-                              {rating.ratedUser?.full_name?.charAt(0) || "?"}
-                            </span>
+                          <div className="w-12 h-12 bg-gradient-to-r from-orange-200 to-teal-200 rounded-full flex items-center justify-center overflow-hidden flex-shrink-0">
+                            {rating.ratedUser?.profile_image ? (
+                              <img src={rating.ratedUser.profile_image} alt={rating.ratedUser.full_name} className="w-full h-full object-cover" />
+                            ) : (
+                              <span className="font-semibold text-gray-600">{rating.ratedUser?.full_name?.charAt(0) || "?"}</span>
+                            )}
                           </div>
                           
                           <div className="flex-1">

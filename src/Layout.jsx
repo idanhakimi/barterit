@@ -371,6 +371,7 @@ export default function Layout({ children, currentPageName }) {
                       <Search className="w-4 h-4 md:w-5 md:h-5" />
                     </Link>
                   </motion.div>
+                  <NotificationBell userId={user?.id} />
                   <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                     <Link 
                       to={createPageUrl("Profile")} 

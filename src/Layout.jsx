@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { User } from "@/entities/User";
 import { BugReport } from "@/entities/BugReport";
-import { Heart, MessageCircle, Star, BarChart3, Settings, Search, LogIn, User as UserIcon, AlertTriangle } from "lucide-react";
+import { Heart, MessageCircle, Star, BarChart3, Settings, Search, LogIn, User as UserIcon, AlertTriangle, Sun, Moon } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -72,6 +72,14 @@ export default function Layout({ children, currentPageName }) {
   const [errorMessage, setErrorMessage] = useState("");
   const [isSubmittingBug, setIsSubmittingBug] = useState(false);
   const [showWelcomePopup, setShowWelcomePopup] = useState(false); // New state for welcome popup
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    try { return localStorage.getItem('darkMode') === 'true'; } catch { return false; }
+  });
+  const toggleDarkMode = () => {
+    const newMode = !isDarkMode;
+    setIsDarkMode(newMode);
+    try { localStorage.setItem('darkMode', newMode.toString()); } catch {}
+  };
   
   const publicPages = ["Home", "TermsOfService", "PrivacyPolicy", "AccessibilityStatement", "Blog", "BlogPost"];
   const isPublicPage = publicPages.includes(currentPageName);
@@ -238,7 +246,7 @@ export default function Layout({ children, currentPageName }) {
 
   // --- App layout for logged-in users ---
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-900 to-gray-800" dir="rtl">
+    <div className={`min-h-screen ${isDarkMode ? 'bg-gradient-to-br from-gray-900 via-slate-900 to-gray-800' : 'bg-gray-50'}`} dir="rtl">
       <AccessibilityWidget />
       <PWAInstallPrompt />
       
@@ -257,18 +265,18 @@ export default function Layout({ children, currentPageName }) {
             --primary-orange: #FF6B35;
             --primary-teal: #4ECDC4;
             --primary-blue: #45B7D1;
-            --bg-dark: #1a1d2e;
-            --bg-darker: #13161f;
-            --bg-card: #252945;
-            --text-light: #e2e8f0;
-            --text-muted: #94a3b8;
-            --border-color: #3d4363;
+            --bg-dark: ${isDarkMode ? '#1a1d2e' : '#f8fafc'};
+            --bg-darker: ${isDarkMode ? '#13161f' : '#f1f5f9'};
+            --bg-card: ${isDarkMode ? '#252945' : '#ffffff'};
+            --text-light: ${isDarkMode ? '#e2e8f0' : '#1e293b'};
+            --text-muted: ${isDarkMode ? '#94a3b8' : '#64748b'};
+            --border-color: ${isDarkMode ? '#3d4363' : '#e2e8f0'};
           }
 
           body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             direction: rtl;
-            background: linear-gradient(135deg, var(--bg-darker) 0%, var(--bg-dark) 100%);
+            background: ${isDarkMode ? 'linear-gradient(135deg, #13161f 0%, #1a1d2e 100%)' : '#f8fafc'};
             color: var(--text-light);
           }
 
@@ -277,16 +285,16 @@ export default function Layout({ children, currentPageName }) {
           }
 
           .glass-card {
-            background: rgba(37, 41, 69, 0.8);
+            background: ${isDarkMode ? 'rgba(37, 41, 69, 0.8)' : 'rgba(255, 255, 255, 0.9)'};
             backdrop-filter: blur(10px);
             border: 1px solid var(--border-color);
             transition: all 0.3s ease;
           }
 
           .glass-card:hover {
-            background: rgba(37, 41, 69, 0.95);
+            background: ${isDarkMode ? 'rgba(37, 41, 69, 0.95)' : 'rgba(255, 255, 255, 1)'};
             transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 10px 30px ${isDarkMode ? 'rgba(0,0,0,0.3)' : 'rgba(0,0,0,0.1)'};
           }
 
           .gradient-text {
@@ -318,7 +326,7 @@ export default function Layout({ children, currentPageName }) {
       
       {/* App Header for logged-in users */}
       <motion.header 
-        className="glass-card border-0 border-b border-gray-700 shadow-lg sticky top-0 z-50"
+        className={`glass-card border-0 border-b ${isDarkMode ? 'border-gray-700' : 'border-gray-200'} shadow-lg sticky top-0 z-50`}
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5 }}
@@ -336,7 +344,7 @@ export default function Layout({ children, currentPageName }) {
                 transition={{ type: "spring", stiffness: 300 }}
               >
                 <img 
-                  src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68556286ca6709c560f1520f/0ee16e649_logo.png" 
+                  src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68556286ca6709c560f1520f/289c7b712_barter4u.png" 
                   alt="BARTER4U Logo" 
                   className="w-full h-full object-contain"
                 />
@@ -376,6 +384,11 @@ export default function Layout({ children, currentPageName }) {
                   </motion.div>
                   
                   <DropdownMenu>
+                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                      <Button variant="ghost" size="icon" onClick={toggleDarkMode} className="w-8 h-8 md:w-10 md:h-10">
+                        {isDarkMode ? <Sun className="w-4 h-4 text-yellow-400" /> : <Moon className="w-4 h-4 text-gray-600" />}
+                      </Button>
+                    </motion.div>
                     <DropdownMenuTrigger asChild>
                       <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                         <Button variant="ghost" size="icon" aria-label="הגדרות ומידע נוסף" className="w-8 h-8 md:w-10 md:h-10">
@@ -394,7 +407,7 @@ export default function Layout({ children, currentPageName }) {
                       </DropdownMenuItem>
                       
                       <DropdownMenuSeparator />
-                      <DropdownMenuItem onClick={handleLogout} className="text-red-500 cursor-pointer">
+                      <DropdownMenuItem onClick={handleLogout} className="text-red-600 font-medium cursor-pointer">
                         התנתק
                       </DropdownMenuItem>
                        {user.role === 'admin' && (
@@ -429,7 +442,7 @@ export default function Layout({ children, currentPageName }) {
       {/* Bottom Navigation with notification badges */}
       {user && !isPublicPage && (
         <motion.nav 
-          className="glass-card border-0 border-t border-gray-700 fixed bottom-0 left-0 right-0 z-50"
+          className={`glass-card border-0 border-t ${isDarkMode ? 'border-gray-700' : 'border-gray-200'} fixed bottom-0 left-0 right-0 z-50`}
           initial={{ y: 100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
@@ -520,7 +533,7 @@ export default function Layout({ children, currentPageName }) {
                 מצאתם באג או בעיה במערכת? נשמח לשמוע ולתקן בהקדם.
               </p>
               <textarea 
-                className="w-full p-3 border rounded-lg mb-4" 
+                className="w-full p-3 border rounded-lg mb-4 text-gray-900 bg-white" 
                 placeholder="תארו את הבעיה שנתקלתם בה..."
                 rows={4}
                 value={errorMessage}

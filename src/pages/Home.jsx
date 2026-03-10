@@ -276,7 +276,7 @@ export default function HomePage() {
                 <div className="flex justify-between items-center py-4">
                     <div className="flex items-center gap-3">
                         <img 
-                            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68556286ca6709c560f1520f/0ee16e649_logo.png" 
+                            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68556286ca6709c560f1520f/289c7b712_barter4u.png" 
                             alt="BARTER4U Logo" 
                             className="w-10 h-10 md:w-12 md:h-12 object-contain cursor-pointer"
                             onClick={() => window.location.href = createPageUrl("Home")}

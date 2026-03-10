@@ -166,6 +166,13 @@ export default function Dashboard() {
 
   const handleSwipe = async (targetUserId, liked, isSuperLike = false) => {
     if (!currentUser) return;
+
+    // Mark as seen in 48h tracker
+    const seenKey = `barter4u_seen_${currentUser.id}`;
+    let seenData = {};
+    try { seenData = JSON.parse(localStorage.getItem(seenKey) || '{}'); } catch {}
+    seenData[targetUserId] = Date.now();
+    localStorage.setItem(seenKey, JSON.stringify(seenData));
     
     // Trigger interaction popup
     if (liked) {
@@ -175,47 +182,47 @@ export default function Dashboard() {
     }
     
     try {
-        // Check if the target user has already liked the current user
-        const existingMatch = await Match.filter({
-            user1_id: targetUserId,
-            user2_id: currentUser.id,
-            user1_liked: true // They liked me already
-        });
+        if (liked) {
+          // Create/update match record - a like always opens a potential chat
+          const myExistingSwipe = await Match.filter({
+              user1_id: currentUser.id,
+              user2_id: targetUserId,
+          });
 
-        if (liked && existingMatch.length > 0) { // It's a mutual match!
-            const match = existingMatch[0];
-            await Match.update(match.id, {
+          // Check if the other user also liked me (mutual match)
+          const theirLike = await Match.filter({
+              user1_id: targetUserId,
+              user2_id: currentUser.id,
+              user1_liked: true
+          });
+
+          if (theirLike.length > 0) {
+            // Mutual match!
+            await Match.update(theirLike[0].id, {
                 status: 'matched',
-                user2_liked: true, // currentUser liked them back
+                user2_liked: true,
                 matched_at: new Date().toISOString()
             });
             const matchedUser = potentialMatches.find(u => u.id === targetUserId);
             setNewMatchInfo({ user: matchedUser, isSuperLike });
             setShowMatchPopup(true);
-            setInteractionTrigger('match'); // Trigger match popup
-        } else {
-            // Create a new match entry (or update if I already swiped on them)
-            const myExistingSwipe = await Match.filter({
-                user1_id: currentUser.id,
-                user2_id: targetUserId,
-            });
-
+            setInteractionTrigger('match');
+          } else {
+            // One-sided like - still create a match record so chat is possible
             if (myExistingSwipe.length > 0) {
-                // If I already swiped on them (e.g., changed my mind from dislike to like)
-                await Match.update(myExistingSwipe[0].id, {
-                    user1_liked: liked,
-                    status: liked ? 'pending' : 'rejected' // If I like, it's pending. If I dislike, it's rejected by me.
-                });
+              await Match.update(myExistingSwipe[0].id, { user1_liked: true, status: 'matched', matched_at: new Date().toISOString() });
             } else {
-                // First time I swipe on them
-                await Match.create({
-                    user1_id: currentUser.id,
-                    user2_id: targetUserId,
-                    user1_liked: liked,
-                    status: liked ? 'pending' : 'rejected'
-                });
+              await Match.create({
+                  user1_id: currentUser.id,
+                  user2_id: targetUserId,
+                  user1_liked: true,
+                  status: 'matched', // open chat immediately on like
+                  matched_at: new Date().toISOString()
+              });
             }
+          }
         }
+        // Dislike: just skip (don't create a record, 48h seen already handles re-showing)
     } catch (error) {
         console.error("Error handling swipe:", error);
     }

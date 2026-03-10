@@ -252,20 +252,29 @@ export default function Search() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium mb-2">זמינות</label>
-                    <Select value={availabilityFilter} onValueChange={setAvailabilityFilter}>
-                      <SelectTrigger><SelectValue placeholder="כל הזמינויות" /></SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">כל הזמינויות</SelectItem>
-                        <SelectItem value="בקרים">בקרים</SelectItem>
-                        <SelectItem value="צהריים">צהריים</SelectItem>
-                        <SelectItem value="ערבים">ערבים</SelectItem>
-                        <SelectItem value='סופ"ש'>סופ"ש</SelectItem>
-                        <SelectItem value="כל השבוע">כל השבוע</SelectItem>
-                      </SelectContent>
-                    </Select>
+                   <label className="block text-sm font-medium mb-2">זמינות</label>
+                   <Select value={availabilityFilter} onValueChange={setAvailabilityFilter}>
+                     <SelectTrigger><SelectValue placeholder="כל הזמינויות" /></SelectTrigger>
+                     <SelectContent>
+                       <SelectItem value="all">כל הזמינויות</SelectItem>
+                       <SelectItem value="בקרים">בקרים</SelectItem>
+                       <SelectItem value="צהריים">צהריים</SelectItem>
+                       <SelectItem value="ערבים">ערבים</SelectItem>
+                       <SelectItem value='סופ"ש'>סופ"ש</SelectItem>
+                       <SelectItem value="כל השבוע">כל השבוע</SelectItem>
+                     </SelectContent>
+                   </Select>
                   </div>
-                </motion.div>
+
+                  <div>
+                   <label className="block text-sm font-medium mb-2">טווח גילאים</label>
+                   <div className="flex items-center gap-2">
+                     <Input type="number" placeholder="מינ'" value={minAge} onChange={e => setMinAge(e.target.value)} className="w-full" min={18} max={99} />
+                     <span className="text-gray-400">-</span>
+                     <Input type="number" placeholder="מקס'" value={maxAge} onChange={e => setMaxAge(e.target.value)} className="w-full" min={18} max={99} />
+                   </div>
+                  </div>
+                  </motion.div>
               )}
             </div>
           </CardContent>

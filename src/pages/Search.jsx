@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { User } from "@/entities/User";
 import { createPageUrl } from "@/utils";
@@ -21,6 +20,8 @@ export default function Search() {
   const [serviceFilter, setServiceFilter] = useState("all");
   const [ratingFilter, setRatingFilter] = useState("all");
   const [availabilityFilter, setAvailabilityFilter] = useState("all");
+  const [minAge, setMinAge] = useState("");
+  const [maxAge, setMaxAge] = useState("");
   const [showFilters, setShowFilters] = useState(false);
 
   useEffect(() => {

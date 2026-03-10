@@ -17,6 +17,7 @@ import { motion, AnimatePresence } from "framer-motion";
 // Removed SendEmail import as it's no longer used for welcome emails
 import AccessibilityWidget from "@/components/AccessibilityWidget";
 import PWAInstallPrompt from "@/components/PWAInstallPrompt";
+import NotificationBell from "@/components/NotificationBell";
 
 // Welcome Popup Component
 const WelcomePopup = ({ isVisible, onClose, userName }) => {

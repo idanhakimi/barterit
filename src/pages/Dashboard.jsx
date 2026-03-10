@@ -90,13 +90,39 @@ export default function Dashboard() {
       ]);
       
       const previousMatches = await Match.filter({ $or: [{ user1_id: user.id }, { user2_id: user.id }] });
-      const matchedIds = new Set(previousMatches.map(m => m.user1_id === user.id ? m.user2_id : m.user1_id));
-
-      let filteredUsers = allUsers.filter(u =>
-        u.id !== user.id &&
-        !blockedIds.has(u.id) &&
-        !matchedIds.has(u.id)
+      // Users I already liked (have open chat or liked)
+      const likedOrChatIds = new Set(
+        previousMatches
+          .filter(m => m.user1_id === user.id && m.user1_liked === true)
+          .map(m => m.user2_id)
       );
+      // Users who liked me (matched with me)
+      const matchedIds = new Set(
+        previousMatches
+          .filter(m => m.status === 'matched')
+          .map(m => m.user1_id === user.id ? m.user2_id : m.user1_id)
+      );
+
+      // 48-hour seen tracking (stored in localStorage)
+      const seenKey = `barter4u_seen_${user.id}`;
+      let seenData = {};
+      try { seenData = JSON.parse(localStorage.getItem(seenKey) || '{}'); } catch {}
+      const now = Date.now();
+      const hours48 = 48 * 60 * 60 * 1000;
+      // Clean expired entries
+      Object.keys(seenData).forEach(k => { if (now - seenData[k] > hours48) delete seenData[k]; });
+
+      let filteredUsers = allUsers.filter(u => {
+        if (u.id === user.id) return false;
+        if (blockedIds.has(u.id)) return false;
+        if (matchedIds.has(u.id)) return false;
+        // Must have at least 1 service offered and 1 wanted
+        if (!u.services_offered || u.services_offered.length === 0) return false;
+        if (!u.services_wanted || u.services_wanted.length === 0) return false;
+        // Skip if seen in last 48h, unless I liked them or have open chat
+        if (seenData[u.id] && !likedOrChatIds.has(u.id)) return false;
+        return true;
+      });
       
       // Smart matching: prioritize users whose offerings match current user's wants
       const usersWithScores = filteredUsers.map(u => {

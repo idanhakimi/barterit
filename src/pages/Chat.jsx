@@ -59,6 +59,20 @@ export default function Chat() {
   useEffect(() => {
     if (selectedMatch) {
       loadMessages();
+
+      // Real-time subscription for new messages
+      const unsubscribe = base44.entities.Message.subscribe((event) => {
+        if (event.data?.match_id === selectedMatch.id) {
+          if (event.type === 'create') {
+            setMessages(prev => {
+              if (prev.find(m => m.id === event.id)) return prev;
+              return [...prev, event.data];
+            });
+          }
+        }
+      });
+
+      return () => unsubscribe();
     }
   }, [selectedMatch]);
   

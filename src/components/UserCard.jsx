@@ -3,56 +3,57 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Star, MapPin, Eye } from "lucide-react";
 
+// Generic silhouette placeholder (gray SVG avatar)
+const PLACEHOLDER_AVATAR = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Crect width='200' height='200' fill='%23d1d5db'/%3E%3Ccircle cx='100' cy='72' r='38' fill='%239ca3af'/%3E%3Cellipse cx='100' cy='180' rx='65' ry='55' fill='%239ca3af'/%3E%3C/svg%3E";
+
 export default function UserCard({ user, onSwipe }) {
   if (!user) return null;
 
-  const initials = user.full_name
-    ? user.full_name.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase()
-    : "?";
+  const profileImage = user.profile_image || PLACEHOLDER_AVATAR;
 
   return (
     <Card className="glass-card overflow-hidden max-w-sm mx-auto">
       {/* Profile Image */}
-      <div className="relative h-72 bg-gradient-to-br from-orange-100 to-teal-100 flex items-center justify-center">
-        {user.profile_image ? (
-          <img
-            src={user.profile_image}
-            alt={user.full_name}
-            className="w-full h-full object-cover"
-          />
-        ) : (
-          <div className="w-28 h-28 rounded-full bg-gradient-to-r from-orange-400 to-teal-400 flex items-center justify-center text-4xl font-bold text-white shadow-lg">
-            {initials}
-          </div>
-        )}
+      <div className="relative h-72 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
+        <img
+          src={profileImage}
+          alt={user.full_name}
+          className="w-full h-full object-cover"
+          onError={(e) => { e.target.src = PLACEHOLDER_AVATAR; }}
+        />
       </div>
 
       <CardContent className="p-4 bg-white text-gray-900">
-        {/* Name & Location */}
-        <div className="flex items-start justify-between mb-2">
-          <div>
-            <h2 className="text-xl font-bold text-gray-900">{user.full_name}</h2>
-            {user.location && (
-              <div className="flex items-center gap-1 text-sm text-gray-500 mt-0.5">
-                <MapPin className="w-3.5 h-3.5" />
-                {user.location}
-              </div>
-            )}
-          </div>
-          <div className="flex flex-col items-end gap-1 text-sm">
+        {/* Name row with rating & views */}
+        <div className="flex items-start justify-between mb-1">
+          <h2 className="text-xl font-bold text-gray-900">{user.full_name}</h2>
+          <div className="flex items-center gap-2 text-sm flex-shrink-0">
             {user.rating > 0 && (
-              <div className="flex items-center gap-1 text-yellow-500">
+              <div className="flex items-center gap-0.5 text-yellow-500">
                 <Star className="w-4 h-4 fill-current" />
                 <span className="font-semibold text-gray-700">{Number(user.rating).toFixed(1)}</span>
               </div>
             )}
             {user.profile_views > 0 && (
-              <div className="flex items-center gap-1 text-blue-400 text-xs">
+              <div className="flex items-center gap-0.5 text-blue-400 text-xs">
                 <Eye className="w-3.5 h-3.5" />
                 <span>{user.profile_views}</span>
               </div>
             )}
           </div>
+        </div>
+
+        {/* Location + Age */}
+        <div className="flex items-center gap-3 text-sm text-gray-500 mb-3">
+          {user.location && (
+            <div className="flex items-center gap-1">
+              <MapPin className="w-3.5 h-3.5" />
+              <span>{user.location}</span>
+            </div>
+          )}
+          {user.age && (
+            <span className="text-gray-500">גיל {user.age}</span>
+          )}
         </div>
 
         {/* Bio */}

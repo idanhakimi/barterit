@@ -495,6 +495,20 @@ export default function Layout({ children, currentPageName }) {
               
               <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
                 <Link 
+                  to={createPageUrl("Schedule")}
+                  className={`flex flex-col items-center gap-1 p-2 md:p-3 rounded-xl transition-all duration-200 ${
+                    isActivePage("Schedule") 
+                      ? "bg-teal-500 text-white shadow-lg transform scale-105" 
+                      : "text-gray-400 hover:text-teal-500"
+                  }`}
+                >
+                  <CalendarCheck className="w-4 h-4 md:w-5 md:h-5" />
+                  <span className="text-xs font-medium">יומן</span>
+                </Link>
+              </motion.div>
+
+              <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+                <Link 
                   to={createPageUrl("MyDashboard")}
                   className={`flex flex-col items-center gap-1 p-2 md:p-3 rounded-xl transition-all duration-200 ${
                     isActivePage("MyDashboard") 
@@ -503,7 +517,7 @@ export default function Layout({ children, currentPageName }) {
                   }`}
                 >
                   <BarChart3 className="w-4 h-4 md:w-5 md:h-5" />
-                  <span className="text-xs font-medium hidden md:inline">הסטטיסטיקות שלי</span>
+                  <span className="text-xs font-medium hidden md:inline">סטטיסטיקות</span>
                   <span className="text-xs font-medium md:hidden">נתונים</span>
                 </Link>
               </motion.div>

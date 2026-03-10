@@ -290,9 +290,7 @@ export default function Dashboard() {
               <SwipeButtons
                 onLike={handleLike}
                 onDislike={handleDislike}
-                onSuperLike={handleSuperLike}
                 disabled={!hasMoreCards}
-                currentUser={currentCard}
               />
 
               {/* Progress indicator */}

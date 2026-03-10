@@ -1,27 +1,38 @@
 import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { MapPin, Star, User } from "lucide-react";
+import { MapPin, Star, Eye } from "lucide-react";
 import { motion } from "framer-motion";
+
+// Generate a consistent avatar based on user id/name
+const getAvatarUrl = (user) => {
+  const seed = user.id || user.full_name || "user";
+  const gender = user.gender === "female" ? "women" : "men";
+  // Use a simple hash to pick consistent number
+  const num = Math.abs(seed.split("").reduce((a, c) => a + c.charCodeAt(0), 0)) % 70 + 1;
+  return `https://randomuser.me/api/portraits/${gender}/${num}.jpg`;
+};
 
 export default function UserCard({ user, onSwipe }) {
   const [dragOffset, setDragOffset] = React.useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = React.useState(false);
+  const [avatarError, setAvatarError] = React.useState(false);
 
   const handleDragEnd = (event, info) => {
     setIsDragging(false);
     const threshold = 100;
-    
     if (Math.abs(info.offset.x) > threshold) {
-      const liked = info.offset.x > 0;
-      onSwipe(user.id, liked);
+      onSwipe(user.id, info.offset.x > 0);
     }
-    
     setDragOffset({ x: 0, y: 0 });
   };
 
   const cardRotation = dragOffset.x * 0.1;
-  const cardOpacity = isDragging ? 0.8 : 1;
+  const cardOpacity = isDragging ? 0.85 : 1;
+
+  const avatarSrc = user.profile_image && !avatarError
+    ? user.profile_image
+    : getAvatarUrl(user);
 
   return (
     <motion.div
@@ -30,128 +41,104 @@ export default function UserCard({ user, onSwipe }) {
       onDragStart={() => setIsDragging(true)}
       onDrag={(event, info) => setDragOffset(info.offset)}
       onDragEnd={handleDragEnd}
-      animate={{ 
-        x: dragOffset.x, 
-        y: dragOffset.y, 
-        rotate: cardRotation,
-        opacity: cardOpacity 
-      }}
+      animate={{ x: dragOffset.x, y: dragOffset.y, rotate: cardRotation, opacity: cardOpacity }}
       className="relative cursor-grab active:cursor-grabbing"
-      whileTap={{ scale: 0.95 }}
+      whileTap={{ scale: 0.98 }}
     >
-      <Card className="glass-card rounded-3xl overflow-hidden shadow-xl border-2 border-white/50 max-w-sm mx-auto">
+      <Card className="rounded-3xl overflow-hidden shadow-xl border border-gray-200 bg-white max-w-sm mx-auto">
         {/* Profile Image */}
-        <div className="relative h-80 bg-gradient-to-br from-orange-200 to-teal-200">
-          {user.profile_image ? (
-            <img 
-              src={user.profile_image} 
-              alt={user.full_name}
-              className="w-full h-full object-cover"
-            />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center">
-              <User className="w-20 h-20 text-white/70" />
-            </div>
-          )}
-          
-          {/* Status Badges */}
-          <div className="absolute top-4 right-4 flex gap-2">
+        <div className="relative h-80 bg-gradient-to-br from-orange-100 to-teal-100">
+          <img
+            src={avatarSrc}
+            alt={user.full_name}
+            className="w-full h-full object-cover"
+            onError={() => setAvatarError(true)}
+          />
+
+          {/* Status Badges top */}
+          <div className="absolute top-3 right-3 flex gap-2">
             {user.verified && (
-              <Badge className="bg-green-500 text-white shadow-lg">
-                מאומת ✓
-              </Badge>
-            )}
-            {user.rating > 0 && (
-              <Badge className="bg-yellow-500 text-white shadow-lg flex items-center gap-1">
-                <Star className="w-3 h-3 fill-current" />
-                {user.rating.toFixed(1)}
-              </Badge>
+              <Badge className="bg-green-500 text-white shadow-md text-xs">מאומת ✓</Badge>
             )}
           </div>
 
-          {/* Like/Dislike Indicators */}
+          {/* Like/Dislike Overlay */}
           {isDragging && (
             <>
               <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ 
-                  opacity: dragOffset.x > 50 ? 1 : 0,
-                  scale: dragOffset.x > 50 ? 1.2 : 1
-                }}
+                animate={{ opacity: dragOffset.x > 50 ? 1 : 0 }}
                 className="absolute inset-0 bg-green-500/20 flex items-center justify-center"
               >
-                <div className="bg-green-500 text-white px-6 py-3 rounded-full font-bold text-lg">
-                  אוהב! ❤️
+                <div className="bg-green-500 text-white px-6 py-3 rounded-full font-bold text-lg shadow-xl">
+                  ❤️ לייק!
                 </div>
               </motion.div>
-              
               <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ 
-                  opacity: dragOffset.x < -50 ? 1 : 0,
-                  scale: dragOffset.x < -50 ? 1.2 : 1
-                }}
+                animate={{ opacity: dragOffset.x < -50 ? 1 : 0 }}
                 className="absolute inset-0 bg-red-500/20 flex items-center justify-center"
               >
-                <div className="bg-red-500 text-white px-6 py-3 rounded-full font-bold text-lg">
-                  לא מתאים 👎
+                <div className="bg-red-500 text-white px-6 py-3 rounded-full font-bold text-lg shadow-xl">
+                  👎 לא מתאים
                 </div>
               </motion.div>
             </>
           )}
         </div>
 
-        {/* User Info */}
-        <div className="p-6 space-y-4">
-          <div className="flex items-start justify-between gap-3">
-            <div className="flex-1">
-              <h3 className="text-xl font-bold text-gray-100">{user.full_name}</h3>
-              <div className="flex items-center gap-2 text-gray-300 text-sm mt-1">
-                <MapPin className="w-4 h-4" />
-                {user.location} {user.age && `• גיל ${user.age}`}
+        {/* User Info - light background, dark text */}
+        <div className="p-5 bg-white space-y-3">
+          {/* Name + location row */}
+          <div className="flex items-start justify-between gap-2">
+            <div>
+              <h3 className="text-xl font-bold text-gray-900">{user.full_name}</h3>
+              <div className="flex items-center gap-1 text-gray-500 text-sm mt-0.5">
+                <MapPin className="w-3.5 h-3.5" />
+                <span>{user.location || "ישראל"}{user.age ? ` • גיל ${user.age}` : ""}</span>
               </div>
             </div>
-            
-            <div className="flex flex-col gap-2">
-              {user.rating > 0 && (
-                <div className="flex items-center gap-1 bg-yellow-500/20 px-2 py-1 rounded-lg">
-                  <Star className="w-4 h-4 fill-yellow-500 text-yellow-500" />
-                  <span className="text-sm font-semibold text-yellow-400">
-                    {user.rating.toFixed(1)}
-                  </span>
+
+            {/* Rating + Views */}
+            <div className="flex flex-col gap-1.5 items-end">
+              {user.rating > 0 ? (
+                <div className="flex items-center gap-1 bg-yellow-50 border border-yellow-200 px-2 py-0.5 rounded-lg">
+                  <Star className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400" />
+                  <span className="text-sm font-bold text-yellow-700">{Number(user.rating).toFixed(1)}</span>
+                  {user.total_ratings > 0 && (
+                    <span className="text-xs text-yellow-600">({user.total_ratings})</span>
+                  )}
+                </div>
+              ) : (
+                <div className="flex items-center gap-1 bg-gray-50 border border-gray-200 px-2 py-0.5 rounded-lg">
+                  <Star className="w-3.5 h-3.5 text-gray-300" />
+                  <span className="text-xs text-gray-400">חדש</span>
                 </div>
               )}
               {user.profile_views > 0 && (
-                <div className="flex items-center gap-1 bg-blue-500/20 px-2 py-1 rounded-lg">
-                  <svg className="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                  </svg>
-                  <span className="text-sm font-semibold text-blue-400">
-                    {user.profile_views}
-                  </span>
+                <div className="flex items-center gap-1 bg-blue-50 border border-blue-100 px-2 py-0.5 rounded-lg">
+                  <Eye className="w-3.5 h-3.5 text-blue-400" />
+                  <span className="text-xs font-medium text-blue-600">{user.profile_views}</span>
                 </div>
               )}
             </div>
           </div>
 
           {user.bio && (
-            <p className="text-gray-300 text-sm leading-relaxed">{user.bio}</p>
+            <p className="text-gray-600 text-sm leading-relaxed line-clamp-2">{user.bio}</p>
           )}
 
           {/* Services Offered */}
           {user.services_offered && user.services_offered.length > 0 && (
             <div>
-              <h4 className="font-semibold text-sm text-gray-300 mb-2">מציע:</h4>
-              <div className="flex flex-wrap gap-2">
-                {user.services_offered.slice(0, 3).map((service, index) => (
-                  <Badge key={index} className="bg-orange-500/20 text-orange-400 border-orange-500/30">
+              <h4 className="text-xs font-semibold text-gray-500 mb-1.5">מציע:</h4>
+              <div className="flex flex-wrap gap-1.5">
+                {user.services_offered.slice(0, 3).map((service, i) => (
+                  <Badge key={i} className="bg-orange-100 text-orange-700 border border-orange-200 text-xs font-medium">
                     {service}
                   </Badge>
                 ))}
                 {user.services_offered.length > 3 && (
-                  <Badge className="bg-gray-700/50 text-gray-400 border-gray-600">
-                    +{user.services_offered.length - 3} נוספים
+                  <Badge className="bg-gray-100 text-gray-600 border border-gray-200 text-xs">
+                    +{user.services_offered.length - 3}
                   </Badge>
                 )}
               </div>
@@ -161,16 +148,16 @@ export default function UserCard({ user, onSwipe }) {
           {/* Services Wanted */}
           {user.services_wanted && user.services_wanted.length > 0 && (
             <div>
-              <h4 className="font-semibold text-sm text-gray-300 mb-2">מחפש:</h4>
-              <div className="flex flex-wrap gap-2">
-                {user.services_wanted.slice(0, 3).map((service, index) => (
-                  <Badge key={index} className="bg-teal-500/20 text-teal-400 border-teal-500/30">
+              <h4 className="text-xs font-semibold text-gray-500 mb-1.5">מחפש:</h4>
+              <div className="flex flex-wrap gap-1.5">
+                {user.services_wanted.slice(0, 3).map((service, i) => (
+                  <Badge key={i} className="bg-teal-100 text-teal-700 border border-teal-200 text-xs font-medium">
                     {service}
                   </Badge>
                 ))}
                 {user.services_wanted.length > 3 && (
-                  <Badge className="bg-gray-700/50 text-gray-400 border-gray-600">
-                    +{user.services_wanted.length - 3} נוספים
+                  <Badge className="bg-gray-100 text-gray-600 border border-gray-200 text-xs">
+                    +{user.services_wanted.length - 3}
                   </Badge>
                 )}
               </div>

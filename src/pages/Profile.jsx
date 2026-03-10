@@ -603,6 +603,45 @@ export default function Profile() {
             </CardContent>
           </Card>
 
+          {/* Ratings & Reviews */}
+          {!isEditing && (
+            <Card className="glass-card">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Star className="w-5 h-5 text-yellow-500 fill-current" />
+                  ביקורות ({myRatings.length})
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {myRatings.length === 0 ? (
+                  <p className="text-gray-500 text-sm text-center py-4">אין עדיין ביקורות. לאחר עסקאות ברטר, משתמשים יוכלו לדרג אתכם.</p>
+                ) : (
+                  <div className="space-y-4">
+                    {myRatings.map((r) => (
+                      <div key={r.id} className="border-b pb-4 last:border-0 last:pb-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <div className="w-8 h-8 bg-gradient-to-r from-orange-200 to-teal-200 rounded-full flex items-center justify-center text-sm font-bold text-gray-600">
+                            {r.ratingUser?.full_name?.charAt(0) || "?"}
+                          </div>
+                          <div>
+                            <p className="text-sm font-semibold text-gray-800">{r.ratingUser?.full_name || "משתמש"}</p>
+                            <div className="flex gap-0.5">
+                              {[1,2,3,4,5].map(s => (
+                                <Star key={s} className={`w-3.5 h-3.5 ${s <= r.stars ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}`} />
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                        {r.barter_description && <Badge className="bg-blue-50 text-blue-700 border-blue-200 text-xs mb-1">{r.barter_description}</Badge>}
+                        {r.comment && <p className="text-sm text-gray-700">{r.comment}</p>}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          )}
+
           {/* Settings */}
           <Card className="glass-card">
             <CardHeader>

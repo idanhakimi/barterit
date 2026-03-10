@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { User } from "@/entities/User";
 import { Rating } from "@/entities/Rating";
@@ -237,7 +236,7 @@ export default function Ratings() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium mb-2">אימייל המשתמש</label>
+                    <label className="block text-sm font-medium mb-2">אימייל המשתמש שברטרתם איתו</label>
                     <Input
                       value={newRating.rated_user_email}
                       onChange={(e) => setNewRating(prev => ({
@@ -245,7 +244,9 @@ export default function Ratings() {
                         rated_user_email: e.target.value
                       }))}
                       placeholder="user@example.com"
+                      dir="ltr"
                     />
+                    <p className="text-xs text-gray-400 mt-1">ניתן למצוא את האימייל בפרופיל המשתמש</p>
                   </div>
 
                   <div>

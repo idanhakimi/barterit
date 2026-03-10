@@ -238,6 +238,16 @@ export default function Profile() {
   };
 
   const handleSave = async () => {
+    // Validate: must have at least 1 service offered and 1 service wanted
+    if (!formData.services_offered || formData.services_offered.length === 0) {
+      alert("חובה להוסיף לפחות שירות אחד שאתם מציעים כדי להמשיך.");
+      return;
+    }
+    if (!formData.services_wanted || formData.services_wanted.length === 0) {
+      alert("חובה להוסיף לפחות שירות אחד שאתם מחפשים כדי להמשיך.");
+      return;
+    }
+
     setIsSaving(true);
     try {
       // Get location if not present

@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { createPageUrl } from '@/utils';
-import { BarChart3, Users, Mail, TrendingUp, Eye } from 'lucide-react';
+import { BarChart3, Users, Mail, TrendingUp, Eye, LogOut } from 'lucide-react';
 import { motion } from 'framer-motion';
 import CRMTable from '../components/admin/CRMTable';
 import EmailCampaignManager from '../components/admin/EmailCampaignManager';

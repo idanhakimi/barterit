@@ -1,5 +1,5 @@
-
 import React, { useState, useEffect, useRef } from "react";
+import { base44 } from "@/api/base44Client";
 import { User } from "@/entities/User";
 import { UploadFile } from "@/integrations/Core";
 import { Button } from "@/components/ui/button";
@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Camera, Star, MapPin, Plus, X, Save, Loader2 } from "lucide-react";
+import { Camera, Star, MapPin, Plus, X, Save, Loader2, Eye } from "lucide-react";
 import { motion } from "framer-motion";
 import { Checkbox } from "@/components/ui/checkbox";
 import { createPageUrl } from "@/utils";
@@ -153,6 +153,8 @@ export default function Profile() {
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [myRatings, setMyRatings] = useState([]);
+  const [profileViews, setProfileViews] = useState(0);
   const [formData, setFormData] = useState({
     full_name: "",
     age: "",
@@ -202,6 +204,20 @@ export default function Profile() {
         max_distance: userData.max_distance || 20,
         profile_image: userData.profile_image || ""
     });
+
+    // Load ratings
+    try {
+      const ratings = await base44.entities.Rating.filter({ rated_user_id: userData.id }, "-created_date");
+      const ratingsWithUsers = await Promise.all(ratings.map(async (r) => {
+        try {
+          const ratingUsers = await base44.entities.User.filter({ id: r.rating_user_id });
+          return { ...r, ratingUser: ratingUsers[0] };
+        } catch { return r; }
+      }));
+      setMyRatings(ratingsWithUsers);
+      setProfileViews(userData.profile_views || 0);
+    } catch (e) {}
+
     setIsLoading(false);
   };
 
@@ -350,19 +366,22 @@ export default function Profile() {
 
                 <div className="flex-1">
                   <h2 className="text-xl font-bold">{user?.full_name}</h2>
-                  <div className="flex items-center gap-4 text-sm text-gray-600 mt-1">
+                  <div className="flex flex-wrap items-center gap-3 text-sm text-gray-600 mt-1">
                     {user?.location && (
                       <div className="flex items-center gap-1">
                         <MapPin className="w-4 h-4" />
                         {user.location}
                       </div>
                     )}
-                    {user?.rating > 0 && (
-                      <div className="flex items-center gap-1">
-                        <Star className="w-4 h-4 fill-current text-yellow-500" />
-                        {user.rating.toFixed(1)} ({user.total_ratings} דירוגים)
-                      </div>
-                    )}
+                    <div className="flex items-center gap-1">
+                      <Star className="w-4 h-4 fill-current text-yellow-500" />
+                      <span className="font-semibold">{user?.rating > 0 ? Number(user.rating).toFixed(1) : "0.0"}</span>
+                      <span className="text-gray-400">({myRatings.length} ביקורות)</span>
+                    </div>
+                    <div className="flex items-center gap-1 text-blue-500">
+                      <Eye className="w-4 h-4" />
+                      <span>{profileViews} צפיות</span>
+                    </div>
                   </div>
                 </div>
               </div>

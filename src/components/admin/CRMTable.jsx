@@ -242,64 +242,57 @@ export default function CRMTable({ leads, onUpdate, contactSubmissions }) {
         </Dialog>
       </div>
 
-      <div className="border rounded-lg overflow-hidden">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>שם</TableHead>
-              <TableHead>אימייל</TableHead>
-              <TableHead>טלפון</TableHead>
-              <TableHead>סטטוס</TableHead>
-              <TableHead>מקור</TableHead>
-              <TableHead>תאריך</TableHead>
-              <TableHead>פעולות</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {filteredLeads.map((lead) => (
-              <TableRow key={lead.id}>
-                <TableCell className="font-medium">{lead.name}</TableCell>
-                <TableCell>
+      <div className="space-y-3">
+        {filteredLeads.map((lead) => (
+          <motion.div
+            key={lead.id}
+            initial={{ opacity: 0, y: 5 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="border rounded-xl p-4 bg-white hover:shadow-md transition-shadow"
+          >
+            <div className="flex flex-wrap justify-between items-start gap-3">
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <p className="font-semibold text-gray-900">{lead.name}</p>
+                  <Badge className={statusColors[lead.status]}>
+                    {lead.status === 'new' ? 'חדש' : lead.status === 'contacted' ? 'צורך קשר' : lead.status === 'qualified' ? 'מוסמך' : lead.status === 'converted' ? 'הומר' : 'סגור'}
+                  </Badge>
+                  <span className="text-xs text-gray-400">
+                    {lead.source === 'landing_page' ? 'דף נחיתה' : lead.source === 'contact_form' ? 'טופס יצירת קשר' : 'ידני'}
+                  </span>
+                </div>
+                <div className="flex flex-wrap gap-3 mt-2 text-sm">
                   <a href={`mailto:${lead.email}`} className="text-blue-600 hover:underline flex items-center gap-1">
-                    <MailIcon className="w-3 h-3" />
-                    {lead.email}
+                    <MailIcon className="w-3 h-3" />{lead.email}
                   </a>
-                </TableCell>
-                <TableCell>
                   {lead.phone && (
                     <a href={`tel:${lead.phone}`} className="text-blue-600 hover:underline flex items-center gap-1">
-                      <Phone className="w-3 h-3" />
-                      {lead.phone}
+                      <Phone className="w-3 h-3" />{lead.phone}
                     </a>
                   )}
-                </TableCell>
-                <TableCell>
-                  <Badge className={statusColors[lead.status]}>
-                    {lead.status === 'new' ? 'חדש' :
-                     lead.status === 'contacted' ? 'צורך קשר' :
-                     lead.status === 'qualified' ? 'מוסמך' :
-                     lead.status === 'converted' ? 'הומר' : 'סגור'}
-                  </Badge>
-                </TableCell>
-                <TableCell>
-                  {lead.source === 'landing_page' ? 'דף נחיתה' :
-                   lead.source === 'contact_form' ? 'טופס יצירת קשר' : 'ידני'}
-                </TableCell>
-                <TableCell>{new Date(lead.created_date).toLocaleDateString('he-IL')}</TableCell>
-                <TableCell>
-                  <div className="flex gap-2">
-                    <Button size="sm" variant="ghost" onClick={() => handleEdit(lead)}>
-                      <Pencil className="w-4 h-4" />
-                    </Button>
-                    <Button size="sm" variant="ghost" onClick={() => handleDelete(lead.id)} className="text-red-600">
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+                  <span className="text-gray-400">{new Date(lead.created_date).toLocaleDateString('he-IL')}</span>
+                </div>
+                {lead.message && (
+                  <p className="mt-2 text-sm text-gray-600 bg-gray-50 rounded-lg p-2 border">{lead.message}</p>
+                )}
+                {lead.notes && (
+                  <p className="mt-1 text-xs text-gray-500 italic">📝 {lead.notes}</p>
+                )}
+              </div>
+              <div className="flex gap-2">
+                <Button size="sm" variant="outline" onClick={() => handleEdit(lead)}>
+                  <Pencil className="w-4 h-4" />
+                </Button>
+                <Button size="sm" variant="outline" onClick={() => handleDelete(lead.id)} className="text-red-600 border-red-200 hover:bg-red-50">
+                  <Trash2 className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+          </motion.div>
+        ))}
+        {filteredLeads.length === 0 && (
+          <div className="text-center py-12 text-gray-400">אין לידים להצגה</div>
+        )}
       </div>
     </div>
   );

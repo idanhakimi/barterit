@@ -39,7 +39,7 @@ export default function Search() {
 
   useEffect(() => {
     filterUsers();
-  }, [users, searchQuery, locationFilter, categoryFilter, serviceFilter, ratingFilter, availabilityFilter]);
+  }, [users, searchQuery, locationFilter, categoryFilter, serviceFilter, ratingFilter, availabilityFilter, minAge, maxAge]);
 
   const loadUsers = async () => {
     setIsLoading(true);
@@ -114,6 +114,14 @@ export default function Search() {
     // Availability filter
     if (availabilityFilter !== "all") {
         filtered = filtered.filter(user => Array.isArray(user.availability) && user.availability.includes(availabilityFilter));
+    }
+
+    // Age range filter
+    if (minAge !== "") {
+      filtered = filtered.filter(user => user.age && user.age >= parseInt(minAge));
+    }
+    if (maxAge !== "") {
+      filtered = filtered.filter(user => user.age && user.age <= parseInt(maxAge));
     }
     
     setFilteredUsers(filtered);

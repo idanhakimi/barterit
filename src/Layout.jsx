@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { createPageUrl } from "@/utils";
 import { User } from "@/entities/User";
 import { BugReport } from "@/entities/BugReport";
-import { Heart, MessageCircle, Star, BarChart3, Settings, Search, LogIn, User as UserIcon, AlertTriangle, Sun, Moon } from "lucide-react";
+import { Heart, MessageCircle, Star, BarChart3, Settings, Search, LogIn, User as UserIcon, AlertTriangle, Sun, Moon, CalendarCheck } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,

@@ -336,13 +336,13 @@ export default function Layout({ children, currentPageName }) {
                 transition={{ type: "spring", stiffness: 300 }}
               >
                 <img 
-                  src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/barterim-logo.png" 
-                  alt="BARTERIM Logo" 
+                  src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68556286ca6709c560f1520f/0ee16e649_logo.png" 
+                  alt="BARTER4U Logo" 
                   className="w-full h-full object-contain"
                 />
               </motion.div>
               <div className="hidden md:block">
-                <h1 className="text-lg md:text-xl font-bold gradient-text">BARTERIM</h1>
+                <h1 className="text-lg md:text-xl font-bold gradient-text">BARTER4U</h1>
                 <p className="text-xs text-gray-500">Give Value, Get Value</p>
               </div>
             </div>

@@ -265,7 +265,7 @@ export default function HomePage() {
   }, []);
 
   const openAuthModal = (mode = 'login') => {
-    window.location.href = 'https://app.barterim.com/';
+    base44.auth.redirectToLogin(createPageUrl('Dashboard'));
   }
 
   return (
@@ -276,13 +276,13 @@ export default function HomePage() {
                 <div className="flex justify-between items-center py-4">
                     <div className="flex items-center gap-3">
                         <img 
-                            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/barterim-logo.png" 
-                            alt="BARTERIM Logo" 
+                            src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68556286ca6709c560f1520f/0ee16e649_logo.png" 
+                            alt="BARTER4U Logo" 
                             className="w-10 h-10 md:w-12 md:h-12 object-contain cursor-pointer"
                             onClick={() => window.location.href = createPageUrl("Home")}
                         />
                         <div className="hidden sm:block">
-                            <h1 className="text-lg md:text-xl font-bold gradient-text">BARTERIM</h1>
+                            <h1 className="text-lg md:text-xl font-bold gradient-text">BARTER4U</h1>
                             <p className="text-xs text-gray-500">Give Value, Get Value</p>
                         </div>
                     </div>

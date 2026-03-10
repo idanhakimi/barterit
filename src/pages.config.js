@@ -48,6 +48,8 @@
  * The mainPage value must match a key in the PAGES object exactly.
  */
 import AccessibilityStatement from './pages/AccessibilityStatement';
+import AdminDashboard from './pages/AdminDashboard';
+import AdminLogin from './pages/AdminLogin';
 import AdminPanel from './pages/AdminPanel';
 import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
@@ -61,13 +63,13 @@ import Ratings from './pages/Ratings';
 import Search from './pages/Search';
 import TermsOfService from './pages/TermsOfService';
 import dashboard from './pages/dashboard';
-import AdminLogin from './pages/AdminLogin';
-import AdminDashboard from './pages/AdminDashboard';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
     "AccessibilityStatement": AccessibilityStatement,
+    "AdminDashboard": AdminDashboard,
+    "AdminLogin": AdminLogin,
     "AdminPanel": AdminPanel,
     "Blog": Blog,
     "BlogPost": BlogPost,
@@ -81,8 +83,6 @@ export const PAGES = {
     "Search": Search,
     "TermsOfService": TermsOfService,
     "dashboard": dashboard,
-    "AdminLogin": AdminLogin,
-    "AdminDashboard": AdminDashboard,
 }
 
 export const pagesConfig = {

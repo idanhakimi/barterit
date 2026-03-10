@@ -63,6 +63,7 @@ import Ratings from './pages/Ratings';
 import Search from './pages/Search';
 import TermsOfService from './pages/TermsOfService';
 import dashboard from './pages/dashboard';
+import Schedule from './pages/Schedule';
 import __Layout from './Layout.jsx';
 
 
@@ -83,6 +84,7 @@ export const PAGES = {
     "Search": Search,
     "TermsOfService": TermsOfService,
     "dashboard": dashboard,
+    "Schedule": Schedule,
 }
 
 export const pagesConfig = {

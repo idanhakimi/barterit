@@ -103,6 +103,7 @@ export default function Chat() {
       allMatches = allMatches.filter((m, i, arr) => arr.findIndex(x => x.id === m.id) === i);
       
       allMatches = allMatches.filter(match => {
+          if (match.status === 'blocked') return false;
           const otherUserId = match.user1_id === user.id ? match.user2_id : match.user1_id;
           return !blockedIds.has(otherUserId);
       });

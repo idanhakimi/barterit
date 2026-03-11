@@ -24,12 +24,15 @@ export default function Search() {
   const [minAge, setMinAge] = useState("");
   const [maxAge, setMaxAge] = useState("");
   const [showFilters, setShowFilters] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [swipedUsers, setSwipedUsers] = useState({}); // userId -> 'liked' | 'disliked'
 
   useEffect(() => {
     const checkAuthAndLoad = async () => {
         try {
-            await User.me(); 
-            loadUsers();
+            const user = await User.me();
+            setCurrentUser(user);
+            loadUsers(user);
         } catch (error) {
             console.error("Authentication failed or user not logged in:", error);
             window.location.href = createPageUrl('Home');

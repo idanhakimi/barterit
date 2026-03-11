@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { User } from "@/entities/User";
+import { Match } from "@/entities/Match";
 import { createPageUrl } from "@/utils";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search as SearchIcon, MapPin, Star, Filter } from "lucide-react";
+import { Search as SearchIcon, MapPin, Star, Filter, Heart, X } from "lucide-react";
 import { motion } from "framer-motion";
 import { getAllCategories, getServicesForCategory, getAllServices } from "../components/servicesData";
 

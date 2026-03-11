@@ -93,8 +93,8 @@ export default function Chat() {
 
       // Get all matches for current user (including one-sided likes)
       const [userMatches1, userMatches2, allUsers] = await Promise.all([
-        Match.filter({ user1_id: user.id, status: "matched" }),
-        Match.filter({ user2_id: user.id, status: "matched" }),
+        Match.filter({ user1_id: user.id }),
+        Match.filter({ user2_id: user.id }),
         User.list(),
       ]);
       

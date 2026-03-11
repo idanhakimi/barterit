@@ -89,14 +89,19 @@ export default function Dashboard() {
           ...usersWhoBlockedMe.map(b => b.blocker_id)
       ]);
       
-      const previousMatches = await Match.filter({ $or: [{ user1_id: user.id }, { user2_id: user.id }] });
-      // Users I already liked (have open chat or liked)
+      const [matchesAsUser1, matchesAsUser2] = await Promise.all([
+        Match.filter({ user1_id: user.id }),
+        Match.filter({ user2_id: user.id }),
+      ]);
+      const previousMatches = [...matchesAsUser1, ...matchesAsUser2];
+
+      // Users I already liked
       const likedOrChatIds = new Set(
-        previousMatches
-          .filter(m => m.user1_id === user.id && m.user1_liked === true)
+        matchesAsUser1
+          .filter(m => m.user1_liked === true)
           .map(m => m.user2_id)
       );
-      // Users who liked me (matched with me)
+      // Users who are already matched with me (in any direction)
       const matchedIds = new Set(
         previousMatches
           .filter(m => m.status === 'matched')

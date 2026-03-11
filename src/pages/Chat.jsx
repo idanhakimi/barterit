@@ -291,7 +291,7 @@ export default function Chat() {
                             <p className="text-sm text-gray-500">
                               {match.user1_liked && match.user2_liked 
                                 ? `התאמה הדדית` 
-                                : match.user1_id === user.id && match.user1_liked
+                                : match.user1_id === currentUser?.id && match.user1_liked
                                 ? `שלחת בקשת ברטר`
                                 : `קיבלת בקשת ברטר 💌`
                               }

@@ -289,7 +289,12 @@ export default function Chat() {
                           <div className="flex-1">
                             <h3 className="font-semibold">{match.otherUser?.full_name}</h3>
                             <p className="text-sm text-gray-500">
-                              התאמה מ-{format(new Date(match.matched_at), "d MMMM", { locale: he })}
+                              {match.user1_liked && match.user2_liked 
+                                ? `התאמה הדדית` 
+                                : match.user1_id === user.id && match.user1_liked
+                                ? `שלחת בקשת ברטר`
+                                : `קיבלת בקשת ברטר`
+                              }
                             </p>
                           </div>
                           

@@ -45,20 +45,42 @@ export default function Search() {
     filterUsers();
   }, [users, searchQuery, locationFilter, categoryFilter, serviceFilter, ratingFilter, availabilityFilter, minAge, maxAge]);
 
-  const loadUsers = async () => {
+  const loadUsers = async (user) => {
     setIsLoading(true);
     try {
-      const currentUser = await User.me();
       const allUsers = await User.list();
-      
-      // Filter out current user
-      const otherUsers = allUsers.filter(user => user.id !== currentUser.id);
+      const otherUsers = allUsers.filter(u => u.id !== user.id);
       setUsers(otherUsers);
-      
+
+      // Load existing swipes to mark already-liked users
+      const [mySwipes] = await Promise.all([
+        Match.filter({ user1_id: user.id }),
+      ]);
+      const existing = {};
+      mySwipes.forEach(m => { existing[m.user2_id] = 'liked'; });
+      setSwipedUsers(existing);
     } catch (error) {
       console.error("Error loading users:", error);
     }
     setIsLoading(false);
+  };
+
+  const handleLike = async (targetUser) => {
+    if (!currentUser || swipedUsers[targetUser.id]) return;
+    setSwipedUsers(prev => ({ ...prev, [targetUser.id]: 'liked' }));
+    try {
+      // Check if they already liked me
+      const theirSwipes = await Match.filter({ user1_id: targetUser.id, user2_id: currentUser.id });
+      if (theirSwipes.length > 0 && theirSwipes[0].user1_liked) {
+        await Match.update(theirSwipes[0].id, { status: 'matched', user2_liked: true, matched_at: new Date().toISOString() });
+      } else {
+        await Match.create({ user1_id: currentUser.id, user2_id: targetUser.id, user1_liked: true, user2_liked: false, status: 'pending' });
+      }
+    } catch (e) { console.error(e); }
+  };
+
+  const handleDislike = (targetUserId) => {
+    setSwipedUsers(prev => ({ ...prev, [targetUserId]: 'disliked' }));
   };
 
   const filterUsers = () => {

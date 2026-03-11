@@ -209,21 +209,19 @@ export default function Dashboard() {
             setShowMatchPopup(true);
             setInteractionTrigger('match');
           } else if (myExistingSwipe) {
-            // I already have a record - update it
+            // I already have a record - update it (still one-sided)
             await Match.update(myExistingSwipe.id, {
               user1_liked: true,
-              status: 'matched',
-              matched_at: new Date().toISOString()
+              status: 'pending',
             });
           } else {
-            // No existing record - create new one-sided like
+            // No existing record - create new one-sided like (pending)
             await Match.create({
                 user1_id: currentUser.id,
                 user2_id: targetUserId,
                 user1_liked: true,
                 user2_liked: false,
-                status: 'matched',
-                matched_at: new Date().toISOString()
+                status: 'pending',
             });
           }
         }

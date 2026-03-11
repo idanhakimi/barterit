@@ -10,56 +10,62 @@ export default function PWAInstallPrompt() {
     const [isStandalone, setIsStandalone] = useState(false);
 
     useEffect(() => {
-        // Check if it's iOS
-        const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+        // Check if it's iOS (including iPadOS)
+        const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+                    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
         setIsIOS(iOS);
 
         // Check if already installed (standalone mode)
         const standalone = window.matchMedia('(display-mode: standalone)').matches || 
-                          window.navigator.standalone || 
+                          window.navigator.standalone === true || 
                           document.referrer.includes('android-app://');
         setIsStandalone(standalone);
 
+        if (standalone) return; // Already installed, do nothing
+
         // Check if user already dismissed the prompt
         const dismissed = localStorage.getItem('pwa_install_dismissed');
-        
-        // Only show if not installed, not dismissed, and user has been on site for a bit
-        if (!standalone && !dismissed) {
-            const timer = setTimeout(() => {
-                setShowPrompt(true);
-            }, 5000); // Show after 5 seconds
 
-            return () => clearTimeout(timer);
-        }
-
-        // Listen for the beforeinstallprompt event (Android/Chrome)
+        // Listen for the beforeinstallprompt event (Android/Chrome) - MUST be set up immediately
         const handleBeforeInstallPrompt = (e) => {
             e.preventDefault();
             setDeferredPrompt(e);
-            if (!dismissed && !standalone) {
-                setShowPrompt(true);
+            if (!dismissed) {
+                setTimeout(() => setShowPrompt(true), 3000);
             }
         };
 
         window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+
+        // For iOS Safari or if beforeinstallprompt doesn't fire, show after delay
+        if (iOS && !dismissed) {
+            const timer = setTimeout(() => {
+                setShowPrompt(true);
+            }, 5000);
+            return () => {
+                clearTimeout(timer);
+                window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+            };
+        }
 
         return () => {
             window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
         };
     }, []);
 
+    const [showIOSGuide, setShowIOSGuide] = useState(false);
+
     const handleInstall = async () => {
         if (deferredPrompt) {
-            // Android Chrome install
             deferredPrompt.prompt();
             const { outcome } = await deferredPrompt.userChoice;
             if (outcome === 'accepted') {
                 setDeferredPrompt(null);
                 setShowPrompt(false);
+                localStorage.setItem('pwa_install_dismissed', 'true');
             }
         } else if (isIOS) {
-            // iOS Safari instructions
-            alert('להתקנה: לחץ על כפתור השיתוף (⬆️) ואז "הוסף למסך הבית"');
+            setShowIOSGuide(true);
         }
     };
 

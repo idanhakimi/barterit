@@ -91,7 +91,7 @@ export default function Chat() {
           ...usersWhoBlockedMe.map(b => b.blocker_id)
       ]);
 
-      // Get all matches for current user
+      // Get all matches for current user (including one-sided likes)
       const userMatches1 = await Match.filter({
         user1_id: user.id,
         status: "matched"
@@ -103,6 +103,8 @@ export default function Chat() {
       });
       
       let allMatches = [...userMatches1, ...userMatches2];
+      // Deduplicate by id
+      allMatches = allMatches.filter((m, i, arr) => arr.findIndex(x => x.id === m.id) === i);
       
       allMatches = allMatches.filter(match => {
           const otherUserId = match.user1_id === user.id ? match.user2_id : match.user1_id;

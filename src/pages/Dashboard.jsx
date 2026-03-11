@@ -183,22 +183,18 @@ export default function Dashboard() {
     
     try {
         if (liked) {
-          // Create/update match record - a like always opens a potential chat
-          const myExistingSwipe = await Match.filter({
-              user1_id: currentUser.id,
-              user2_id: targetUserId,
-          });
+          // Check all existing match records between the two users (in any direction)
+          const [mySwipes, theirSwipes] = await Promise.all([
+            Match.filter({ user1_id: currentUser.id, user2_id: targetUserId }),
+            Match.filter({ user1_id: targetUserId, user2_id: currentUser.id }),
+          ]);
 
-          // Check if the other user also liked me (mutual match)
-          const theirLike = await Match.filter({
-              user1_id: targetUserId,
-              user2_id: currentUser.id,
-              user1_liked: true
-          });
+          const myExistingSwipe = mySwipes[0] || null;
+          const theirExistingSwipe = theirSwipes[0] || null;
 
-          if (theirLike.length > 0) {
-            // Mutual match!
-            await Match.update(theirLike[0].id, {
+          if (theirExistingSwipe && theirExistingSwipe.user1_liked) {
+            // They liked me first - update their record to mark mutual match
+            await Match.update(theirExistingSwipe.id, {
                 status: 'matched',
                 user2_liked: true,
                 matched_at: new Date().toISOString()
@@ -207,19 +203,23 @@ export default function Dashboard() {
             setNewMatchInfo({ user: matchedUser, isSuperLike });
             setShowMatchPopup(true);
             setInteractionTrigger('match');
+          } else if (myExistingSwipe) {
+            // I already have a record - update it
+            await Match.update(myExistingSwipe.id, {
+              user1_liked: true,
+              status: 'matched',
+              matched_at: new Date().toISOString()
+            });
           } else {
-            // One-sided like - still create a match record so chat is possible
-            if (myExistingSwipe.length > 0) {
-              await Match.update(myExistingSwipe[0].id, { user1_liked: true, status: 'matched', matched_at: new Date().toISOString() });
-            } else {
-              await Match.create({
-                  user1_id: currentUser.id,
-                  user2_id: targetUserId,
-                  user1_liked: true,
-                  status: 'matched', // open chat immediately on like
-                  matched_at: new Date().toISOString()
-              });
-            }
+            // No existing record - create new one-sided like
+            await Match.create({
+                user1_id: currentUser.id,
+                user2_id: targetUserId,
+                user1_liked: true,
+                user2_liked: false,
+                status: 'matched',
+                matched_at: new Date().toISOString()
+            });
           }
         }
         // Dislike: just skip (don't create a record, 48h seen already handles re-showing)

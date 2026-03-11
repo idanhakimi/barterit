@@ -92,15 +92,11 @@ export default function Chat() {
       ]);
 
       // Get all matches for current user (including one-sided likes)
-      const userMatches1 = await Match.filter({
-        user1_id: user.id,
-        status: "matched"
-      });
-      
-      const userMatches2 = await Match.filter({
-        user2_id: user.id,
-        status: "matched"
-      });
+      const [userMatches1, userMatches2, allUsers] = await Promise.all([
+        Match.filter({ user1_id: user.id, status: "matched" }),
+        Match.filter({ user2_id: user.id, status: "matched" }),
+        User.list(),
+      ]);
       
       let allMatches = [...userMatches1, ...userMatches2];
       // Deduplicate by id
@@ -111,18 +107,18 @@ export default function Chat() {
           return !blockedIds.has(otherUserId);
       });
 
+      // Build user lookup map for fast access
+      const userMap = {};
+      allUsers.forEach(u => { userMap[u.id] = u; });
+
       // Get user details for each match
-      const matchesWithUsers = await Promise.all(
-        allMatches.map(async (match) => {
-          const otherUserId = match.user1_id === user.id ? match.user2_id : match.user1_id;
-          const otherUserArray = await User.filter({ id: otherUserId });
-          
-          return {
-            ...match,
-            otherUser: otherUserArray[0],
-          };
-        })
-      );
+      const matchesWithUsers = allMatches.map((match) => {
+        const otherUserId = match.user1_id === user.id ? match.user2_id : match.user1_id;
+        return {
+          ...match,
+          otherUser: userMap[otherUserId] || null,
+        };
+      }).filter(m => m.otherUser !== null);
       
       setMatches(matchesWithUsers);
       

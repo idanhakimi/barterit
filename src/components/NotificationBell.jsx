@@ -88,7 +88,8 @@ export default function NotificationBell({ userId }) {
             initial={{ opacity: 0, y: -10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.95 }}
-            className="absolute left-0 top-12 w-80 bg-white rounded-xl shadow-2xl border border-gray-100 z-50 overflow-hidden"
+            className="absolute left-0 md:left-auto md:right-0 top-12 w-screen max-w-sm bg-white rounded-xl shadow-2xl border border-gray-100 z-50 overflow-hidden"
+            style={{ maxWidth: 'min(320px, calc(100vw - 1rem))' }}
           >
             <div className="flex items-center justify-between px-4 py-3 border-b">
               <h3 className="font-semibold text-gray-800">התראות</h3>

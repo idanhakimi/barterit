@@ -397,11 +397,42 @@ export default function Search() {
                         </div>
                       )}
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
+
+                     {/* Like / Dislike buttons */}
+                     <div className="flex gap-2 mt-3 justify-end">
+                       {swipedUsers[user.id] === 'liked' ? (
+                         <span className="text-xs text-green-600 font-medium flex items-center gap-1">
+                           <Heart className="w-3 h-3 fill-current" /> נשלחה בקשה
+                         </span>
+                       ) : swipedUsers[user.id] === 'disliked' ? (
+                         <span className="text-xs text-gray-400 font-medium flex items-center gap-1">
+                           <X className="w-3 h-3" /> דילגת
+                         </span>
+                       ) : (
+                         <>
+                           <Button
+                             size="sm"
+                             variant="outline"
+                             className="border-red-200 text-red-400 hover:bg-red-50 hover:text-red-500 rounded-full w-9 h-9 p-0"
+                             onClick={() => handleDislike(user.id)}
+                           >
+                             <X className="w-4 h-4" />
+                           </Button>
+                           <Button
+                             size="sm"
+                             className="bg-gradient-to-r from-orange-500 to-teal-500 text-white rounded-full w-9 h-9 p-0"
+                             onClick={() => handleLike(user)}
+                           >
+                             <Heart className="w-4 h-4" />
+                           </Button>
+                         </>
+                       )}
+                     </div>
+                    </div>
+                    </CardContent>
+                    </Card>
+                    </motion.div>
+                    ))}
         </div>
 
         {filteredUsers.length === 0 && !isLoading && (

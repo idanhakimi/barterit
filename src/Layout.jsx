@@ -437,7 +437,7 @@ export default function Layout({ children, currentPageName }) {
       </motion.header>
 
       {/* Main Content */}
-      <main className="flex-1 pb-20 md:pb-24">
+      <main className="flex-1 pb-20 md:pb-24" style={{ paddingBottom: 'calc(5rem + env(safe-area-inset-bottom))' }}>
         {children}
       </main>
 
@@ -445,6 +445,7 @@ export default function Layout({ children, currentPageName }) {
       {user && !isPublicPage && (
         <motion.nav 
           className={`glass-card border-0 border-t ${isDarkMode ? 'border-gray-700' : 'border-gray-200'} fixed bottom-0 left-0 right-0 z-50`}
+          style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
           initial={{ y: 100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}

@@ -13,8 +13,8 @@ export default function UserCard({ user, onSwipe }) {
 
   return (
     <Card className="glass-card overflow-hidden max-w-sm mx-auto">
-      {/* Profile Image */}
-      <div className="relative h-72 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
+      {/* Profile Image - taller on mobile */}
+      <div className="relative h-64 sm:h-72 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
         <img
           src={profileImage}
           alt={user.full_name}
@@ -23,7 +23,7 @@ export default function UserCard({ user, onSwipe }) {
         />
       </div>
 
-      <CardContent className="p-4 bg-white text-gray-900">
+      <CardContent className="p-3 sm:p-4 bg-white text-gray-900">
         {/* Name row with rating & views */}
         <div className="flex items-start justify-between mb-1">
           <h2 className="text-xl font-bold text-gray-900">{user.full_name}</h2>

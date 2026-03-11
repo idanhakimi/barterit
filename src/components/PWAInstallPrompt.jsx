@@ -79,7 +79,9 @@ export default function PWAInstallPrompt() {
     }
 
     return (
+        <>
         <AnimatePresence>
+            {showPrompt && !showIOSGuide && (
             <motion.div
                 initial={{ opacity: 0, y: 100 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -118,8 +120,8 @@ export default function PWAInstallPrompt() {
                                     onClick={handleInstall}
                                     className="bg-gradient-to-r from-orange-500 to-teal-500 text-white text-sm px-4 py-2 h-auto"
                                 >
-                                    <Download className="w-4 h-4 mr-1" />
-                                    {isIOS ? 'הוראות התקנה' : 'התקן'}
+                                    <Download className="w-4 h-4 ml-1" />
+                                    {isIOS ? 'הוראות התקנה' : 'התקן עכשיו'}
                                 </Button>
                                 <Button
                                     variant="outline"
@@ -133,6 +135,52 @@ export default function PWAInstallPrompt() {
                     </div>
                 </div>
             </motion.div>
+            )}
         </AnimatePresence>
+
+        {/* iOS Step-by-step Install Guide */}
+        <AnimatePresence>
+            {showIOSGuide && (
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="fixed inset-0 bg-black/60 z-50 flex items-end"
+                    onClick={() => setShowIOSGuide(false)}
+                >
+                    <motion.div
+                        initial={{ y: 300 }}
+                        animate={{ y: 0 }}
+                        exit={{ y: 300 }}
+                        className="bg-white w-full rounded-t-3xl p-6"
+                        onClick={e => e.stopPropagation()}
+                    >
+                        <div className="w-12 h-1.5 bg-gray-300 rounded-full mx-auto mb-5" />
+                        <h3 className="text-xl font-bold text-center text-gray-800 mb-2">הוסף למסך הבית</h3>
+                        <p className="text-sm text-gray-500 text-center mb-6">בצע את הצעדים הבאים ב-Safari</p>
+                        
+                        <div className="space-y-4">
+                            <div className="flex items-center gap-4">
+                                <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold text-lg flex-shrink-0">1</div>
+                                <p className="text-gray-700">לחץ על כפתור השיתוף <span className="text-xl">⬆️</span> בתחתית המסך</p>
+                            </div>
+                            <div className="flex items-center gap-4">
+                                <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold text-lg flex-shrink-0">2</div>
+                                <p className="text-gray-700">גלול למטה ובחר <strong>"הוסף למסך הבית"</strong></p>
+                            </div>
+                            <div className="flex items-center gap-4">
+                                <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold text-lg flex-shrink-0">3</div>
+                                <p className="text-gray-700">לחץ <strong>"הוסף"</strong> בפינה הימנית העליונה</p>
+                            </div>
+                        </div>
+
+                        <Button onClick={() => { setShowIOSGuide(false); handleDismiss(); }} className="w-full mt-6 bg-gradient-to-r from-orange-500 to-teal-500 text-white">
+                            הבנתי
+                        </Button>
+                    </motion.div>
+                </motion.div>
+            )}
+        </AnimatePresence>
+        </>
     );
 }

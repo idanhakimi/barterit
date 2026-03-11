@@ -293,7 +293,7 @@ export default function Chat() {
                                 ? `התאמה הדדית` 
                                 : match.user1_id === user.id && match.user1_liked
                                 ? `שלחת בקשת ברטר`
-                                : `קיבלת בקשת ברטר`
+                                : `קיבלת בקשת ברטר 💌`
                               }
                             </p>
                           </div>

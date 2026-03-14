@@ -122,32 +122,7 @@ export default function Chat() {
     setIsLoading(false);
   };
 
-  const loadMessages = async () => {
-    if (!selectedMatch) return;
-    
-    try {
-      const matchMessages = await Message.filter(
-        { match_id: selectedMatch.id },
-        "-created_date"
-      );
-      
-      // Check if this is the first time chatting (no messages yet)
-      if (matchMessages.length === 0 && currentUser) {
-        // Send welcome bot message
-        const welcomeMessage = await Message.create({
-          match_id: selectedMatch.id,
-          sender_id: 'system',
-          content: `🎉 ברוכים הבאים לצ'אט הראשון שלכם! אנחנו ב-Barter4U שמחים שמצאתם התאמה. כאן תוכלו להתחיל לתאם את חילופי השירותים. בהצלחה! 💪`,
-          message_type: 'system'
-        });
-        setMessages([welcomeMessage]);
-      } else {
-        setMessages(matchMessages.reverse());
-      }
-    } catch (error) {
-      console.error("Error loading messages:", error);
-    }
-  };
+
 
   const sendMessage = async () => {
     if (!newMessage.trim() || !selectedMatch || !currentUser || isSending) return;

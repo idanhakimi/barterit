@@ -52,24 +52,30 @@ export default function Chat() {
   }, []);
 
   useEffect(() => {
-    if (selectedMatch) {
-      loadMessages();
+    if (!selectedMatch) return;
 
-      // Real-time subscription for new messages
-      const unsubscribe = base44.entities.Message.subscribe((event) => {
-        if (event.data?.match_id === selectedMatch.id) {
-          if (event.type === 'create') {
-            setMessages(prev => {
-              if (prev.find(m => m.id === event.id)) return prev;
-              return [...prev, event.data];
-            });
-          }
-        }
-      });
+    // Load messages for this match
+    const fetchMessages = async () => {
+      const msgs = await base44.entities.Message.filter(
+        { match_id: selectedMatch.id },
+        "created_date"
+      );
+      setMessages(msgs);
+    };
+    fetchMessages();
 
-      return () => unsubscribe();
-    }
-  }, [selectedMatch]);
+    // Real-time subscription for new messages
+    const unsubscribe = base44.entities.Message.subscribe((event) => {
+      if (event.data?.match_id === selectedMatch.id && event.type === 'create') {
+        setMessages(prev => {
+          if (prev.find(m => m.id === event.id)) return prev;
+          return [...prev, event.data];
+        });
+      }
+    });
+
+    return () => unsubscribe();
+  }, [selectedMatch?.id]);
   
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });

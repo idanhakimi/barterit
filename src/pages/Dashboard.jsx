@@ -387,14 +387,14 @@ export default function Dashboard() {
             </div>
           ) : (
             <Card className="glass-card p-8 text-center">
-              <div className="w-20 h-20 bg-gradient-to-r from-orange-200 to-teal-200 rounded-full mx-auto mb-6 flex items-center justify-center">
-                <Sparkles className="w-10 h-10 text-orange-600" />
-              </div>
-              <h3 className="text-xl font-bold mb-4 text-gray-100">זה הכל לעכשיו!</h3>
-              <p className="text-gray-400 mb-6">
-                בדקתם את כל הפרופילים הזמינים.
-                נוסיף עוד כשיהיו משתמשים חדשים!
-              </p>
+            <div className="w-20 h-20 bg-gradient-to-r from-orange-200 to-teal-200 rounded-full mx-auto mb-6 flex items-center justify-center">
+              <Sparkles className="w-10 h-10 text-orange-600" />
+            </div>
+            <h3 className="text-xl font-bold mb-4 text-gray-900">זה הכל לעכשיו!</h3>
+            <p className="text-gray-700 mb-6">
+              בדקתם את כל הפרופילים הזמינים.
+              נוסיף עוד כשיהיו משתמשים חדשים!
+            </p>
               <div className="flex gap-3 justify-center">
                 <Button
                   variant="outline"

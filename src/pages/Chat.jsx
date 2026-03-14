@@ -129,7 +129,7 @@ export default function Chat() {
     
     setIsSending(true);
     try {
-      const message = await Message.create({
+      const message = await base44.entities.Message.create({
         match_id: selectedMatch.id,
         sender_id: currentUser.id,
         content: newMessage.trim(),

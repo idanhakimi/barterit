@@ -257,12 +257,9 @@ export default function Chat() {
                           <div className="flex-1">
                             <h3 className="font-semibold">{match.otherUser?.full_name}</h3>
                             <p className="text-sm text-gray-500">
-                              {match.user1_liked && match.user2_liked 
-                                ? `התאמה הדדית` 
-                                : match.user1_id === currentUser?.id && match.user1_liked
-                                ? `שלחת בקשת ברטר`
-                                : `קיבלת בקשת ברטר 💌`
-                              }
+                              {match.status === 'matched'
+                                ? '🎉 התאמה הדדית'
+                                : '⏳ ממתין לאישור'}
                             </p>
                           </div>
                           

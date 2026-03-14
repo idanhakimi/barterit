@@ -66,15 +66,12 @@ export default function Search() {
   const handleLike = async (targetUser) => {
     if (!currentUser || swipedUsers[targetUser.id]) return;
     setSwipedUsers(prev => ({ ...prev, [targetUser.id]: 'liked' }));
-    try {
-      // Check if they already liked me
-      const theirSwipes = await Match.filter({ user1_id: targetUser.id, user2_id: currentUser.id });
-      if (theirSwipes.length > 0 && theirSwipes[0].user1_liked) {
-        await Match.update(theirSwipes[0].id, { status: 'matched', user2_liked: true, matched_at: new Date().toISOString() });
-      } else {
-        await Match.create({ user1_id: currentUser.id, user2_id: targetUser.id, user1_liked: true, user2_liked: false, status: 'pending' });
-      }
-    } catch (e) { console.error(e); }
+    const theirSwipes = await base44.entities.Match.filter({ user1_id: targetUser.id, user2_id: currentUser.id });
+    if (theirSwipes.length > 0 && theirSwipes[0].user1_liked) {
+      await base44.entities.Match.update(theirSwipes[0].id, { status: 'matched', user2_liked: true, matched_at: new Date().toISOString() });
+    } else {
+      await base44.entities.Match.create({ user1_id: currentUser.id, user2_id: targetUser.id, user1_liked: true, user2_liked: false, status: 'pending' });
+    }
   };
 
   const handleDislike = (targetUserId) => {

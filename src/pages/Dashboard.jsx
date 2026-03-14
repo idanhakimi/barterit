@@ -187,8 +187,8 @@ export default function Dashboard() {
         if (liked) {
           // Check all existing match records between the two users (in any direction)
           const [mySwipes, theirSwipes] = await Promise.all([
-            Match.filter({ user1_id: currentUser.id, user2_id: targetUserId }),
-            Match.filter({ user1_id: targetUserId, user2_id: currentUser.id }),
+            base44.entities.Match.filter({ user1_id: currentUser.id, user2_id: targetUserId }),
+            base44.entities.Match.filter({ user1_id: targetUserId, user2_id: currentUser.id }),
           ]);
 
           const myExistingSwipe = mySwipes[0] || null;

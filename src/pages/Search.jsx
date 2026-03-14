@@ -29,11 +29,10 @@ export default function Search() {
   useEffect(() => {
     const checkAuthAndLoad = async () => {
         try {
-            const user = await User.me();
+            const user = await base44.auth.me();
             setCurrentUser(user);
             loadUsers(user);
         } catch (error) {
-            console.error("Authentication failed or user not logged in:", error);
             window.location.href = createPageUrl('Home');
         }
     };

@@ -47,14 +47,13 @@ export default function Search() {
   const loadUsers = async (user) => {
     setIsLoading(true);
     try {
-      const allUsers = await User.list();
+      const [allUsers, mySwipes] = await Promise.all([
+        base44.entities.User.list(),
+        base44.entities.Match.filter({ user1_id: user.id }),
+      ]);
       const otherUsers = allUsers.filter(u => u.id !== user.id);
       setUsers(otherUsers);
 
-      // Load existing swipes to mark already-liked users
-      const [mySwipes] = await Promise.all([
-        Match.filter({ user1_id: user.id }),
-      ]);
       const existing = {};
       mySwipes.forEach(m => { existing[m.user2_id] = 'liked'; });
       setSwipedUsers(existing);

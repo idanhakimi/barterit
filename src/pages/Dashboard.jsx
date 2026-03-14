@@ -226,13 +226,13 @@ export default function Dashboard() {
             ]);
           } else if (myExistingSwipe) {
             // I already have a record - update it (still one-sided)
-            await Match.update(myExistingSwipe.id, {
+            await base44.entities.Match.update(myExistingSwipe.id, {
               user1_liked: true,
               status: 'pending',
             });
           } else {
             // No existing record - create new one-sided like (pending)
-            const newMatch = await Match.create({
+            const newMatch = await base44.entities.Match.create({
                 user1_id: currentUser.id,
                 user2_id: targetUserId,
                 user1_liked: true,

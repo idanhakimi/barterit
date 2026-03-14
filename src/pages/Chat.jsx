@@ -98,13 +98,16 @@ export default function Chat() {
         ...usersWhoBlockedMe.map(b => b.blocker_id)
       ]);
 
-      // Only show MATCHED (mutual) conversations
+      // Show MATCHED (mutual) + PENDING where I sent the like
       let allMatches = [...userMatches1, ...userMatches2];
       allMatches = allMatches.filter((m, i, arr) => arr.findIndex(x => x.id === m.id) === i);
       allMatches = allMatches.filter(match => {
-        if (match.status !== 'matched') return false;
         const otherUserId = match.user1_id === user.id ? match.user2_id : match.user1_id;
-        return !blockedIds.has(otherUserId);
+        if (blockedIds.has(otherUserId)) return false;
+        if (match.status === 'matched') return true;
+        // Include pending where I was the one who liked
+        if (match.status === 'pending' && match.user1_id === user.id && match.user1_liked) return true;
+        return false;
       });
 
       const userMap = {};

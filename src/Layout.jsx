@@ -251,6 +251,7 @@ export default function Layout({ children, currentPageName }) {
     <div className={`min-h-screen ${isDarkMode ? 'bg-gradient-to-br from-gray-900 via-slate-900 to-gray-800' : 'bg-gray-50'}`} dir="rtl">
       <AccessibilityWidget />
       <PWAInstallPrompt />
+      <RealtimeToast userId={user?.id} />
       
       {/* Welcome Popup */}
       <WelcomePopup

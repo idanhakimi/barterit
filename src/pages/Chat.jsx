@@ -170,6 +170,19 @@ export default function Chat() {
       
       setMessages(prev => [...prev, message]);
       setNewMessage("");
+
+      // Notify the other user
+      const otherUserId = selectedMatch.otherUser?.id;
+      if (otherUserId) {
+        base44.entities.Notification.create({
+          user_id: otherUserId,
+          type: 'new_message',
+          title: `💬 הודעה חדשה מ-${currentUser.full_name}`,
+          body: newMessage.trim().substring(0, 80),
+          from_user_id: currentUser.id,
+          related_id: selectedMatch.id,
+        });
+      }
       
     } catch (error) {
       console.error("Error sending message:", error);

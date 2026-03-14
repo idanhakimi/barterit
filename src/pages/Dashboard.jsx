@@ -196,7 +196,7 @@ export default function Dashboard() {
 
           if (theirExistingSwipe && theirExistingSwipe.user1_liked) {
             // They liked me first - update their record to mark mutual match
-            await Match.update(theirExistingSwipe.id, {
+            await base44.entities.Match.update(theirExistingSwipe.id, {
                 status: 'matched',
                 user2_liked: true,
                 matched_at: new Date().toISOString()

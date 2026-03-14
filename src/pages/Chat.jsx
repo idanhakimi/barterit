@@ -98,18 +98,15 @@ export default function Chat() {
         ...usersWhoBlockedMe.map(b => b.blocker_id)
       ]);
 
-      // Show ALL matches where I ever liked the other person (regardless of status)
+      // Show ALL matches where I ever liked or was liked (status: pending or matched)
       let allMatches = [...userMatches1, ...userMatches2];
       allMatches = allMatches.filter((m, i, arr) => arr.findIndex(x => x.id === m.id) === i);
       allMatches = allMatches.filter(match => {
         const otherUserId = match.user1_id === user.id ? match.user2_id : match.user1_id;
         if (blockedIds.has(otherUserId)) return false;
         if (match.status === 'blocked') return false;
-        // I liked them: either I'm user1 and liked, or I'm user2 and liked, or it's a mutual match
-        const iLiked = (match.user1_id === user.id && match.user1_liked) ||
-                       (match.user2_id === user.id && match.user2_liked) ||
-                       match.status === 'matched';
-        return iLiked;
+        // Show if there's any like interaction (pending or matched)
+        return match.status === 'matched' || match.status === 'pending';
       });
 
       const userMap = {};

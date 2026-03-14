@@ -50,7 +50,7 @@ export default function Dashboard() {
   useEffect(() => {
     const checkAuthAndLoad = async () => {
         try {
-            const user = await User.me();
+            const user = await base44.auth.me();
             setCurrentUser(user);
             
             // Check if first time user

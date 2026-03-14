@@ -216,11 +216,64 @@ export default function HomePage() {
 
   // SEO: Update document title and meta for home page
   useEffect(() => {
-    document.title = 'BARTERIM - פלטפורמת ברטרים וחילופי שירותים בישראל | ברטר דיגיטלי';
-    const metaDesc = document.querySelector('meta[name="description"]');
-    if (metaDesc) {
-      metaDesc.setAttribute('content', 'הצטרפו ל-BARTERIM - פלטפורמת הברטרים המובילה בישראל. החליפו שירותים ללא כסף, בנו קהילה חזקה וחסכו כסף. ברטר דיגיטלי, חילופי שירותים וכלכלת שיתוף.');
+    document.title = 'BARTER4U - פלטפורמת ברטר וחילופי שירותים בישראל | תן ערך, קבל ערך';
+
+    const setMeta = (name, content, attr = 'name') => {
+      let el = document.querySelector(`meta[${attr}="${name}"]`);
+      if (!el) { el = document.createElement('meta'); el.setAttribute(attr, name); document.head.appendChild(el); }
+      el.setAttribute('content', content);
+    };
+
+    setMeta('description', 'BARTER4U - פלטפורמת הברטר המובילה בישראל. החליפו שירותים ומוצרים ללא כסף. תכנות, עיצוב, אימון, בישול, לימוד ועוד. הצטרפו לאלפי משתמשים שמחליפים ערך בערך.');
+    setMeta('keywords', 'ברטר, חילופי שירותים, ברטר בישראל, החלפת שירותים, כלכלת שיתוף, ברטר דיגיטלי, שירותים ללא כסף, החלפת מוצרים, ברטר אונליין, swap services, barter israel, skill swap, trade services');
+    setMeta('robots', 'index, follow');
+    setMeta('author', 'BARTER4U');
+    setMeta('og:type', 'website', 'property');
+    setMeta('og:title', 'BARTER4U - פלטפורמת ברטר וחילופי שירותים בישראל', 'property');
+    setMeta('og:description', 'החליפו שירותים ומוצרים ללא כסף. תן מה שאתה יודע, קבל מה שאתה צריך. הצטרפו לקהילת הברטר הגדולה בישראל.', 'property');
+    setMeta('og:image', 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68556286ca6709c560f1520f/289c7b712_barter4u.png', 'property');
+    setMeta('og:url', window.location.href, 'property');
+    setMeta('og:locale', 'he_IL', 'property');
+    setMeta('og:site_name', 'BARTER4U', 'property');
+    setMeta('twitter:card', 'summary_large_image');
+    setMeta('twitter:title', 'BARTER4U - פלטפורמת ברטר וחילופי שירותים בישראל');
+    setMeta('twitter:description', 'החליפו שירותים ומוצרים ללא כסף. תן מה שאתה יודע, קבל מה שאתה צריך.');
+    setMeta('twitter:image', 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68556286ca6709c560f1520f/289c7b712_barter4u.png');
+
+    // Structured Data JSON-LD
+    const existingLd = document.getElementById('ld-json-org');
+    if (!existingLd) {
+      const script = document.createElement('script');
+      script.id = 'ld-json-org';
+      script.type = 'application/ld+json';
+      script.textContent = JSON.stringify({
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "name": "BARTER4U",
+            "url": "https://barter4u.base44.app/",
+            "description": "פלטפורמת ברטר וחילופי שירותים בישראל - תן ערך, קבל ערך",
+            "inLanguage": "he",
+            "potentialAction": { "@type": "SearchAction", "target": "https://barter4u.base44.app/Search?q={search_term_string}", "query-input": "required name=search_term_string" }
+          },
+          {
+            "@type": "Organization",
+            "name": "BARTER4U",
+            "url": "https://barter4u.base44.app/",
+            "logo": "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68556286ca6709c560f1520f/289c7b712_barter4u.png",
+            "sameAs": ["https://www.facebook.com/profile.php?id=61578175921537","https://www.instagram.com/barter4u_official"],
+            "description": "פלטפורמת הברטר המובילה בישראל - החלפת שירותים ומוצרים ללא כסף"
+          }
+        ]
+      });
+      document.head.appendChild(script);
     }
+
+    // Canonical link
+    let canonical = document.querySelector('link[rel="canonical"]');
+    if (!canonical) { canonical = document.createElement('link'); canonical.rel = 'canonical'; document.head.appendChild(canonical); }
+    canonical.href = window.location.href;
   }, []);
 
   // Track page view

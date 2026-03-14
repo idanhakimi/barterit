@@ -79,17 +79,16 @@ export default function Dashboard() {
 
   const fetchPotentialMatches = async (user) => {
     try {
-      const allUsers = await User.list();
-      const myBlockedUsers = await Block.filter({ blocker_id: user.id });
-      const usersWhoBlockedMe = await Block.filter({ blocked_id: user.id });
-      const blockedIds = new Set([
-          ...myBlockedUsers.map(b => b.blocked_id), 
-          ...usersWhoBlockedMe.map(b => b.blocker_id)
+      const [allUsers, myBlockedUsers, usersWhoBlockedMe, matchesAsUser1, matchesAsUser2] = await Promise.all([
+        base44.entities.User.list(),
+        base44.entities.Block.filter({ blocker_id: user.id }),
+        base44.entities.Block.filter({ blocked_id: user.id }),
+        base44.entities.Match.filter({ user1_id: user.id }),
+        base44.entities.Match.filter({ user2_id: user.id }),
       ]);
-      
-      const [matchesAsUser1, matchesAsUser2] = await Promise.all([
-        Match.filter({ user1_id: user.id }),
-        Match.filter({ user2_id: user.id }),
+      const blockedIds = new Set([
+          ...myBlockedUsers.map(b => b.blocked_id),
+          ...usersWhoBlockedMe.map(b => b.blocker_id)
       ]);
       const previousMatches = [...matchesAsUser1, ...matchesAsUser2];
 

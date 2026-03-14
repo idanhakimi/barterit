@@ -235,12 +235,21 @@ export default function Dashboard() {
             });
           } else {
             // No existing record - create new one-sided like (pending)
-            await Match.create({
+            const newMatch = await Match.create({
                 user1_id: currentUser.id,
                 user2_id: targetUserId,
                 user1_liked: true,
                 user2_liked: false,
                 status: 'pending',
+            });
+            // Notify the target user about the new like
+            await base44.entities.Notification.create({
+              user_id: targetUserId,
+              type: 'new_like',
+              title: '💌 מישהו רוצה לעשות איתך ברטר!',
+              body: `${currentUser.full_name} שלח/ה לך בקשת ברטר`,
+              from_user_id: currentUser.id,
+              related_id: newMatch.id,
             });
           }
         }

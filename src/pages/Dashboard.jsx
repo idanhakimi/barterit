@@ -210,77 +210,74 @@ export default function Dashboard() {
       setInteractionTrigger('dislike');
     }
     
-    try {
-        if (liked) {
-          // Check all existing match records between the two users (in any direction)
-          const [mySwipes, theirSwipes] = await Promise.all([
-            base44.entities.Match.filter({ user1_id: currentUser.id, user2_id: targetUserId }),
-            base44.entities.Match.filter({ user1_id: targetUserId, user2_id: currentUser.id }),
-          ]);
+    if (liked) {
+      // Check all existing match records between the two users (in any direction)
+      const [mySwipes, theirSwipes] = await Promise.all([
+        base44.entities.Match.filter({ user1_id: currentUser.id, user2_id: targetUserId }),
+        base44.entities.Match.filter({ user1_id: targetUserId, user2_id: currentUser.id }),
+      ]);
 
-          const myExistingSwipe = mySwipes[0] || null;
-          const theirExistingSwipe = theirSwipes[0] || null;
+      const myExistingSwipe = mySwipes[0] || null;
+      const theirExistingSwipe = theirSwipes[0] || null;
 
-          if (theirExistingSwipe && theirExistingSwipe.user1_liked) {
-            // They liked me first - update their record to mark mutual match
-            await base44.entities.Match.update(theirExistingSwipe.id, {
-                status: 'matched',
-                user2_liked: true,
-                matched_at: new Date().toISOString()
-            });
-            const matchedUser = potentialMatches.find(u => u.id === targetUserId);
-            setNewMatchInfo({ user: matchedUser, isSuperLike });
-            setShowMatchPopup(true);
-            setInteractionTrigger('match');
-            // Notify both users about the mutual match
-            await Promise.all([
-              base44.entities.Notification.create({
-                user_id: targetUserId,
-                type: 'new_like',
-                title: '🎉 התאמה הדדית!',
-                body: `${currentUser.full_name} אישר/ה את הברטר שלכם. התחילו לשוחח!`,
-                from_user_id: currentUser.id,
-                related_id: theirExistingSwipe.id,
-              }),
-              base44.entities.Notification.create({
-                user_id: currentUser.id,
-                type: 'new_like',
-                title: '🎉 התאמה הדדית!',
-                body: `${matchedUser?.full_name} גם אוהב/ת אותך! זה מאץ'!`,
-                from_user_id: targetUserId,
-                related_id: theirExistingSwipe.id,
-              }),
-            ]);
-          } else if (myExistingSwipe) {
-            // I already have a record - update it (still one-sided)
-            await base44.entities.Match.update(myExistingSwipe.id, {
-              user1_liked: true,
-              status: 'pending',
-            });
-          } else {
-            // No existing record - create new one-sided like (pending)
-            const newMatch = await base44.entities.Match.create({
-                user1_id: currentUser.id,
-                user2_id: targetUserId,
-                user1_liked: true,
-                user2_liked: false,
-                status: 'pending',
-            });
-            // Notify the target user about the new like
-            await base44.entities.Notification.create({
-              user_id: targetUserId,
-              type: 'new_like',
-              title: '💌 מישהו רוצה לעשות איתך ברטר!',
-              body: `${currentUser.full_name} שלח/ה לך בקשת ברטר`,
-              from_user_id: currentUser.id,
-              related_id: newMatch.id,
-            });
-          }
-        }
-        // Dislike: just skip (don't create a record, 48h seen already handles re-showing)
-    } catch (error) {
-        console.error("Error handling swipe:", error);
+      console.log("Swipe debug:", { targetUserId, myExistingSwipe, theirExistingSwipe });
+
+      if (theirExistingSwipe && theirExistingSwipe.user1_liked) {
+        // They liked me first - update their record to mark mutual match
+        await base44.entities.Match.update(theirExistingSwipe.id, {
+            status: 'matched',
+            user2_liked: true,
+            matched_at: new Date().toISOString()
+        });
+        const matchedUser = potentialMatches.find(u => u.id === targetUserId);
+        setNewMatchInfo({ user: matchedUser, isSuperLike });
+        setShowMatchPopup(true);
+        setInteractionTrigger('match');
+        await Promise.all([
+          base44.entities.Notification.create({
+            user_id: targetUserId,
+            type: 'new_like',
+            title: '🎉 התאמה הדדית!',
+            body: `${currentUser.full_name} אישר/ה את הברטר שלכם. התחילו לשוחח!`,
+            from_user_id: currentUser.id,
+            related_id: theirExistingSwipe.id,
+          }),
+          base44.entities.Notification.create({
+            user_id: currentUser.id,
+            type: 'new_like',
+            title: '🎉 התאמה הדדית!',
+            body: `${matchedUser?.full_name} גם אוהב/ת אותך! זה מאץ'!`,
+            from_user_id: targetUserId,
+            related_id: theirExistingSwipe.id,
+          }),
+        ]);
+      } else if (myExistingSwipe) {
+        await base44.entities.Match.update(myExistingSwipe.id, {
+          user1_liked: true,
+          status: 'pending',
+        });
+        console.log("Updated existing match to pending");
+      } else {
+        console.log("Creating new match for targetUserId:", targetUserId);
+        const newMatch = await base44.entities.Match.create({
+            user1_id: currentUser.id,
+            user2_id: targetUserId,
+            user1_liked: true,
+            user2_liked: false,
+            status: 'pending',
+        });
+        console.log("Match created:", newMatch);
+        await base44.entities.Notification.create({
+          user_id: targetUserId,
+          type: 'new_like',
+          title: '💌 מישהו רוצה לעשות איתך ברטר!',
+          body: `${currentUser.full_name} שלח/ה לך בקשת ברטר`,
+          from_user_id: currentUser.id,
+          related_id: newMatch.id,
+        });
+      }
     }
+    // Dislike: just skip
 
     setCurrentCardIndex(prev => prev + 1);
   };

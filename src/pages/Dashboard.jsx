@@ -1,7 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { User } from "@/entities/User";
-import { Match } from "@/entities/Match";
-import { Block } from "@/entities/Block";
 import { base44 } from "@/api/base44Client";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";

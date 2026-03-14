@@ -40,6 +40,7 @@ export default function Search() {
     checkAuthAndLoad();
   }, []);
 
+
   useEffect(() => {
     filterUsers();
   }, [users, searchQuery, locationFilter, categoryFilter, serviceFilter, ratingFilter, availabilityFilter, minAge, maxAge]);

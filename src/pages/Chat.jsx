@@ -161,35 +161,22 @@ export default function Chat() {
   const handleBlockUser = async () => {
     if (!currentUser || !selectedMatch) return;
     const otherUserId = selectedMatch.otherUser.id;
-    try {
-        await Block.create({
-            blocker_id: currentUser.id,
-            blocked_id: otherUserId
-        });
-        setShowBlockDialog(false);
-        setSelectedMatch(null);
-        // Reload data with the current user to reflect the block
-        await loadData(currentUser); 
-    } catch(error) {
-        console.error("Failed to block user:", error);
-    }
+    await base44.entities.Block.create({ blocker_id: currentUser.id, blocked_id: otherUserId });
+    setShowBlockDialog(false);
+    setSelectedMatch(null);
+    await loadData(currentUser);
   };
 
   const handleReportUser = async () => {
     if (!currentUser || !selectedMatch || !reportReason.trim()) return;
-    const otherUserId = selectedMatch.otherUser.id;
-    try {
-        await Report.create({
-            reporter_id: currentUser.id,
-            reported_id: otherUserId,
-            reason: reportReason,
-            match_id: selectedMatch.id
-        });
-        setReportReason("");
-        setShowReportDialog(false);
-    } catch (error) {
-        console.error("Failed to report user:", error);
-    }
+    await base44.entities.Report.create({
+      reporter_id: currentUser.id,
+      reported_id: selectedMatch.otherUser.id,
+      reason: reportReason,
+      match_id: selectedMatch.id
+    });
+    setReportReason("");
+    setShowReportDialog(false);
   };
 
 

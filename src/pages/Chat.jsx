@@ -258,14 +258,14 @@ export default function Chat() {
                           
                           <div className="flex-1">
                             <h3 className="font-semibold">{match.otherUser?.full_name}</h3>
-                            <p className="text-sm text-gray-500">
-                              {match.status === 'matched'
-                                ? '🎉 התאמה הדדית'
-                                : '⏳ ממתין לאישור'}
-                            </p>
+                            {match.otherUser?.location && (
+                              <p className="text-sm text-gray-500">{match.otherUser.location}</p>
+                            )}
                           </div>
                           
-                          <ArrowRight className="w-5 h-5 text-gray-400" />
+                          <Button size="sm" className="bg-gradient-to-r from-orange-500 to-teal-500 text-white text-xs px-3">
+                            פתח צ'אט
+                          </Button>
                         </div>
                       </CardContent>
                     </Card>

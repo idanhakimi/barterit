@@ -42,7 +42,7 @@ export default function Chat() {
   useEffect(() => {
     const checkAuthAndLoad = async () => {
         try {
-            const user = await User.me();
+            const user = await base44.auth.me();
             loadData(user);
         } catch (error) {
             window.location.href = createPageUrl('Home');

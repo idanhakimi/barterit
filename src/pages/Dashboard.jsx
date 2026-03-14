@@ -208,6 +208,25 @@ export default function Dashboard() {
             setNewMatchInfo({ user: matchedUser, isSuperLike });
             setShowMatchPopup(true);
             setInteractionTrigger('match');
+            // Notify both users about the mutual match
+            await Promise.all([
+              base44.entities.Notification.create({
+                user_id: targetUserId,
+                type: 'new_like',
+                title: '🎉 התאמה הדדית!',
+                body: `${currentUser.full_name} אישר/ה את הברטר שלכם. התחילו לשוחח!`,
+                from_user_id: currentUser.id,
+                related_id: theirExistingSwipe.id,
+              }),
+              base44.entities.Notification.create({
+                user_id: currentUser.id,
+                type: 'new_like',
+                title: '🎉 התאמה הדדית!',
+                body: `${matchedUser?.full_name} גם אוהב/ת אותך! זה מאץ'!`,
+                from_user_id: targetUserId,
+                related_id: theirExistingSwipe.id,
+              }),
+            ]);
           } else if (myExistingSwipe) {
             // I already have a record - update it (still one-sided)
             await Match.update(myExistingSwipe.id, {

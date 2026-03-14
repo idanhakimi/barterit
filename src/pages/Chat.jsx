@@ -83,47 +83,39 @@ export default function Chat() {
 
   const loadData = async (user) => {
     setIsLoading(true);
-    setCurrentUser(user); // Set current user from the passed argument
+    setCurrentUser(user);
     try {
-      const myBlockedUsers = await Block.filter({ blocker_id: user.id });
-      const usersWhoBlockedMe = await Block.filter({ blocked_id: user.id });
-      const blockedIds = new Set([
-          ...myBlockedUsers.map(b => b.blocked_id), 
-          ...usersWhoBlockedMe.map(b => b.blocker_id)
+      const [myBlockedUsers, usersWhoBlockedMe, userMatches1, userMatches2, allUsers] = await Promise.all([
+        base44.entities.Block.filter({ blocker_id: user.id }),
+        base44.entities.Block.filter({ blocked_id: user.id }),
+        base44.entities.Match.filter({ user1_id: user.id }),
+        base44.entities.Match.filter({ user2_id: user.id }),
+        base44.entities.User.list(),
       ]);
 
-      // Get all matches for current user (including one-sided likes)
-      const [userMatches1, userMatches2, allUsers] = await Promise.all([
-        Match.filter({ user1_id: user.id }),
-        Match.filter({ user2_id: user.id }),
-        User.list(),
+      const blockedIds = new Set([
+        ...myBlockedUsers.map(b => b.blocked_id),
+        ...usersWhoBlockedMe.map(b => b.blocker_id)
       ]);
-      
+
+      // Only show MATCHED (mutual) conversations
       let allMatches = [...userMatches1, ...userMatches2];
-      // Deduplicate by id
       allMatches = allMatches.filter((m, i, arr) => arr.findIndex(x => x.id === m.id) === i);
-      
       allMatches = allMatches.filter(match => {
-          if (match.status === 'blocked') return false;
-          const otherUserId = match.user1_id === user.id ? match.user2_id : match.user1_id;
-          return !blockedIds.has(otherUserId);
+        if (match.status !== 'matched') return false;
+        const otherUserId = match.user1_id === user.id ? match.user2_id : match.user1_id;
+        return !blockedIds.has(otherUserId);
       });
 
-      // Build user lookup map for fast access
       const userMap = {};
       allUsers.forEach(u => { userMap[u.id] = u; });
 
-      // Get user details for each match
       const matchesWithUsers = allMatches.map((match) => {
         const otherUserId = match.user1_id === user.id ? match.user2_id : match.user1_id;
-        return {
-          ...match,
-          otherUser: userMap[otherUserId] || null,
-        };
+        return { ...match, otherUser: userMap[otherUserId] || null };
       }).filter(m => m.otherUser !== null);
-      
+
       setMatches(matchesWithUsers);
-      
     } catch (error) {
       console.error("Error loading matches:", error);
     }

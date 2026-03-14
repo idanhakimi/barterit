@@ -341,13 +341,13 @@ export default function Chat() {
                           ? 'bg-gradient-to-r from-orange-500 to-teal-500 text-white'
                           : message.sender_id === 'system'
                           ? 'bg-blue-500/20 text-blue-300 border border-blue-500/30 text-center'
-                          : 'bg-gray-700/80 text-gray-100 border border-gray-600'
+                          : 'bg-white text-gray-900 border border-gray-200 shadow-sm'
                       }`}
                     >
                       <p>{message.content}</p>
                       {message.sender_id !== 'system' && (
                         <p className={`text-xs mt-1 ${
-                          message.sender_id === currentUser.id ? 'text-white/70' : 'text-gray-400'
+                          message.sender_id === currentUser.id ? 'text-white/70' : 'text-gray-500'
                         }`}>
                           {format(new Date(message.created_date), "HH:mm")}
                         </p>

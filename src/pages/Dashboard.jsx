@@ -58,6 +58,33 @@ export default function Dashboard() {
             if (isFirstTime) {
               setShowFirstTime(true);
             }
+
+            // Check if profile is incomplete and send daily reminder notification
+            const isProfileIncomplete = !user.bio || !user.services_offered?.length || !user.services_wanted?.length || !user.location;
+            if (isProfileIncomplete) {
+              const lastReminderKey = `barter4u_profile_reminder_${user.id}`;
+              const lastReminder = localStorage.getItem(lastReminderKey);
+              const now = Date.now();
+              const oneDayMs = 24 * 60 * 60 * 1000;
+              if (!lastReminder || now - parseInt(lastReminder) > oneDayMs) {
+                localStorage.setItem(lastReminderKey, String(now));
+                // In-app notification
+                base44.entities.Notification.create({
+                  user_id: user.id,
+                  type: 'new_like',
+                  title: '📝 השלם את הפרופיל שלך',
+                  body: 'פרופיל מלא מגדיל פי 5 את הסיכוי לקבל התאמות! לחץ כאן להשלמה.',
+                  from_user_id: user.id,
+                  related_id: user.id,
+                });
+                // Email reminder
+                base44.integrations.Core.SendEmail({
+                  to: user.email,
+                  subject: '⚡ השלם את הפרופיל שלך ב-BARTER4U',
+                  body: `שלום ${user.full_name || ''},\n\nשמנו לב שהפרופיל שלך עדיין לא הושלם.\nפרופיל מלא מגדיל פי 5 את הסיכוי לקבל התאמות מצוינות!\n\nלחץ כאן להשלמת הפרופיל: https://barter4u.base44.app/Profile\n\nצוות BARTER4U 🚀`
+                }).catch(() => {});
+              }
+            }
             
             loadData(user);
         } catch (error) {

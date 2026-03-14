@@ -18,6 +18,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import AccessibilityWidget from "@/components/AccessibilityWidget";
 import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 import NotificationBell from "@/components/NotificationBell";
+import RealtimeToast from "@/components/RealtimeToast";
 
 // Welcome Popup Component
 const WelcomePopup = ({ isVisible, onClose, userName }) => {

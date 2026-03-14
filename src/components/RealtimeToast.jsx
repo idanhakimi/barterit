@@ -12,8 +12,27 @@ const ICONS = {
   meeting_reminder: <Bell className="w-5 h-5 text-orange-500" />,
 };
 
+const LOGO = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/68556286ca6709c560f1520f/289c7b712_barter4u.png";
+
+function requestNotificationPermission() {
+  if ("Notification" in window && Notification.permission === "default") {
+    Notification.requestPermission();
+  }
+}
+
+function sendBrowserNotification(title, body) {
+  if ("Notification" in window && Notification.permission === "granted") {
+    new Notification(title, { body, icon: LOGO });
+  }
+}
+
 export default function RealtimeToast({ userId }) {
   const [toasts, setToasts] = useState([]);
+
+  useEffect(() => {
+    // Ask for browser notification permission on mount
+    requestNotificationPermission();
+  }, []);
 
   useEffect(() => {
     if (!userId) return;
@@ -22,11 +41,17 @@ export default function RealtimeToast({ userId }) {
       if (event.data?.user_id === userId && event.type === "create") {
         const notif = event.data;
         const id = notif.id || Date.now();
+
+        // In-app toast
         setToasts(prev => [...prev, { ...notif, toastId: id }]);
-        // Auto-dismiss after 5 seconds
         setTimeout(() => {
           setToasts(prev => prev.filter(t => t.toastId !== id));
         }, 5000);
+
+        // Browser / phone push notification (only for match & message)
+        if (["new_like", "new_message"].includes(notif.type)) {
+          sendBrowserNotification(notif.title, notif.body || "");
+        }
       }
     });
 

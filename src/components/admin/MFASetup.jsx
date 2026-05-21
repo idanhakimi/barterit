@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Shield, CheckCircle, AlertCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { base44 } from '@/api/base44Client';
+import { User } from '@/entities/User';
 
 export default function MFASetup({ user, onMFAVerified }) {
   const [mfaEnabled, setMfaEnabled] = useState(false);
@@ -33,17 +33,9 @@ export default function MFASetup({ user, onMFAVerified }) {
 
   const generateMFASecret = async () => {
     try {
-      const response = await base44.integrations.Core.InvokeLLM({
-        prompt: 'Generate a random 32-character base32 secret for TOTP authentication',
-        response_json_schema: {
-          type: 'object',
-          properties: {
-            secret: { type: 'string' }
-          }
-        }
-      });
-      
-      const generatedSecret = response.secret || 'JBSWY3DPEHPK3PXP'; // Fallback
+      const base32Chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+      const generatedSecret = Array.from(crypto.getRandomValues(new Uint8Array(20)))
+        .map(b => base32Chars[b % 32]).join('');
       setSecret(generatedSecret);
       
       // Generate QR code URL for Google Authenticator
@@ -69,7 +61,7 @@ export default function MFASetup({ user, onMFAVerified }) {
     try {
       // In production, verify the TOTP code on the server
       // For now, we'll store the secret and mark MFA as enabled
-      await base44.auth.updateMe({
+      await User.updateMyUserData({
         mfa_enabled: true,
         mfa_secret: secret
       });
@@ -85,7 +77,7 @@ export default function MFASetup({ user, onMFAVerified }) {
 
   const disableMFA = async () => {
     try {
-      await base44.auth.updateMe({
+      await User.updateMyUserData({
         mfa_enabled: false,
         mfa_secret: null
       });

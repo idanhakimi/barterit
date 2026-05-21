@@ -8,6 +8,7 @@ import { createPageUrl } from '@/utils';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import AuthModal from '../components/AuthModal';
+import { supabase } from '@/lib/supabase';
 import ContactForm from '../components/ContactForm';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { PiggyBank } from 'lucide-react';
@@ -318,7 +319,8 @@ export default function HomePage() {
   }, []);
 
   const openAuthModal = (mode = 'login') => {
-    base44.auth.redirectToLogin(createPageUrl('Dashboard'));
+    setAuthMode(mode);
+    setShowAuthModal(true);
   }
 
   return (
@@ -717,6 +719,11 @@ export default function HomePage() {
       </footer>
 
 
+    <AuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        defaultMode={authMode}
+      />
     </div>
   );
 }

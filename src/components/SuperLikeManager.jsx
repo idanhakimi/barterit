@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { User, SuperLike } from "@/entities/all";
+import { User } from "@/entities/User";
+import { SuperLike } from "@/entities/SuperLike";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Zap, Clock } from "lucide-react";

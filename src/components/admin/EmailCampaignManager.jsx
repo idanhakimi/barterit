@@ -64,12 +64,9 @@ export default function EmailCampaignManager({ campaigns, leads, onUpdate }) {
       let sentCount = 0;
       for (const lead of leads) {
         try {
-          await base44.integrations.Core.SendEmail({
-            from_name: 'Barter4U',
-            to: lead.email,
-            subject: campaign.subject,
-            body: campaign.body
-          });
+          // TODO: connect to email service (Resend / SendGrid via Supabase Edge Function)
+          // Example: await fetch('/api/send-email', { method: 'POST', body: JSON.stringify({ to: lead.email, subject: campaign.subject, body: campaign.body }) })
+          console.log(`Would send email to ${lead.email}`);
           sentCount++;
         } catch (error) {
           console.error(`Failed to send to ${lead.email}:`, error);

@@ -176,7 +176,7 @@ export default function Layout({ children, currentPageName }) {
       console.error("Login failed:", error);
     }
   };
-  
+
   const handleLogout = async () => {
     try {
       await User.logout();

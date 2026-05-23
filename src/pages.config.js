@@ -54,7 +54,7 @@ import AdminPanel from './pages/AdminPanel';
 import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
 import Chat from './pages/Chat';
-import Dashboard from './pages/Dashboard';
+import Dashboard from './pages/dashboard';
 import Home from './pages/Home';
 import MyDashboard from './pages/MyDashboard';
 import PrivacyPolicy from './pages/PrivacyPolicy';
@@ -63,7 +63,6 @@ import Ratings from './pages/Ratings';
 import Schedule from './pages/Schedule';
 import Search from './pages/Search';
 import TermsOfService from './pages/TermsOfService';
-import dashboard from './pages/dashboard';
 import __Layout from './Layout.jsx';
 
 
@@ -84,7 +83,6 @@ export const PAGES = {
     "Schedule": Schedule,
     "Search": Search,
     "TermsOfService": TermsOfService,
-    "dashboard": dashboard,
 }
 
 export const pagesConfig = {

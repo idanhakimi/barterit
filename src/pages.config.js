@@ -54,7 +54,7 @@ import AdminPanel from './pages/AdminPanel';
 import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
 import Chat from './pages/Chat';
-import Dashboard from './pages/dashboard';
+import Dashboard from './pages/Dashboard';
 import Home from './pages/Home';
 import MyDashboard from './pages/MyDashboard';
 import PrivacyPolicy from './pages/PrivacyPolicy';

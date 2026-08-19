@@ -1,0 +1,38 @@
+{
+  "name": "ProfileView",
+  "type": "object",
+  "properties": {
+    "viewer_id": {
+      "type": "string",
+      "description": "\u05de\u05d6\u05d4\u05d4 \u05d4\u05e6\u05d5\u05e4\u05d4"
+    },
+    "viewed_user_id": {
+      "type": "string",
+      "description": "\u05de\u05d6\u05d4\u05d4 \u05d4\u05de\u05e9\u05ea\u05de\u05e9 \u05e9\u05e0\u05e6\u05e4\u05d4"
+    },
+    "view_count": {
+      "type": "number",
+      "default": 1,
+      "description": "\u05db\u05de\u05d5\u05ea \u05d4\u05e6\u05e4\u05d9\u05d5\u05ea"
+    }
+  },
+  "required": [
+    "viewer_id",
+    "viewed_user_id"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "viewer_id": "{{user.id}}"
+        },
+        {
+          "viewed_user_id": "{{user.id}}"
+        }
+      ]
+    },
+    "write": {
+      "viewer_id": "{{user.id}}"
+    }
+  }
+}

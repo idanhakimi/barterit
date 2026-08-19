@@ -1,0 +1,49 @@
+{
+  "name": "SuperLike",
+  "type": "object",
+  "properties": {
+    "sender_id": {
+      "type": "string",
+      "description": "\u05de\u05d6\u05d4\u05d4 \u05d4\u05e9\u05d5\u05dc\u05d7"
+    },
+    "receiver_id": {
+      "type": "string",
+      "description": "\u05de\u05d6\u05d4\u05d4 \u05d4\u05de\u05e7\u05d1\u05dc"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "\u05ea\u05d0\u05e8\u05d9\u05da \u05d4\u05e9\u05dc\u05d9\u05d7\u05d4"
+    },
+    "used": {
+      "type": "boolean",
+      "default": true,
+      "description": "\u05d4\u05d0\u05dd \u05e0\u05d5\u05e6\u05dc\u05d4 \u05d4\u05e1\u05d5\u05e4\u05e8 \u05dc\u05d9\u05d9\u05e7"
+    }
+  },
+  "required": [
+    "sender_id",
+    "receiver_id",
+    "date"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "sender_id": "{{user.id}}"
+        },
+        {
+          "receiver_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "write": {
+      "sender_id": "{{user.id}}"
+    }
+  }
+}

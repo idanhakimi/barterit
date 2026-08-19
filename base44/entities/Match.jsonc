@@ -1,0 +1,65 @@
+{
+  "name": "Match",
+  "type": "object",
+  "properties": {
+    "user1_id": {
+      "type": "string",
+      "description": "\u05de\u05d6\u05d4\u05d4 \u05d4\u05de\u05e9\u05ea\u05de\u05e9 \u05d4\u05e8\u05d0\u05e9\u05d5\u05df"
+    },
+    "user2_id": {
+      "type": "string",
+      "description": "\u05de\u05d6\u05d4\u05d4 \u05d4\u05de\u05e9\u05ea\u05de\u05e9 \u05d4\u05e9\u05e0\u05d9"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "matched",
+        "blocked"
+      ],
+      "default": "pending",
+      "description": "\u05e1\u05d8\u05d8\u05d5\u05e1 \u05d4\u05d4\u05ea\u05d0\u05de\u05d4"
+    },
+    "user1_liked": {
+      "type": "boolean",
+      "default": false,
+      "description": "\u05d4\u05d0\u05dd \u05d4\u05de\u05e9\u05ea\u05de\u05e9 \u05d4\u05e8\u05d0\u05e9\u05d5\u05df \u05e0\u05ea\u05df \u05dc\u05d9\u05d9\u05e7"
+    },
+    "user2_liked": {
+      "type": "boolean",
+      "default": false,
+      "description": "\u05d4\u05d0\u05dd \u05d4\u05de\u05e9\u05ea\u05de\u05e9 \u05d4\u05e9\u05e0\u05d9 \u05e0\u05ea\u05df \u05dc\u05d9\u05d9\u06a9"
+    },
+    "matched_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "\u05d6\u05de\u05df \u05d4\u05d4\u05ea\u05d0\u05de\u05d4"
+    }
+  },
+  "required": [
+    "user1_id",
+    "user2_id"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "user1_id": "{{user.id}}"
+        },
+        {
+          "user2_id": "{{user.id}}"
+        }
+      ]
+    },
+    "write": {
+      "$or": [
+        {
+          "user1_id": "{{user.id}}"
+        },
+        {
+          "user2_id": "{{user.id}}"
+        }
+      ]
+    }
+  }
+}

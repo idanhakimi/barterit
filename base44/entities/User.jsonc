@@ -1,0 +1,121 @@
+{
+  "name": "User",
+  "type": "object",
+  "properties": {
+    "age": {
+      "type": "number",
+      "description": "\u05d2\u05d9\u05dc \u05d4\u05de\u05e9\u05ea\u05de\u05e9"
+    },
+    "location": {
+      "type": "string",
+      "description": "\u05d0\u05d6\u05d5\u05e8 \u05de\u05d2\u05d5\u05e8\u05d9\u05dd \u05d8\u05e7\u05e1\u05d8\u05d5\u05d0\u05dc\u05d9"
+    },
+    "latitude": {
+      "type": "number",
+      "description": "\u05e7\u05d5 \u05e8\u05d5\u05d7\u05d1"
+    },
+    "longitude": {
+      "type": "number",
+      "description": "\u05e7\u05d5 \u05d0\u05d5\u05e8\u05da"
+    },
+    "profile_image": {
+      "type": "string",
+      "description": "\u05ea\u05de\u05d5\u05e0\u05ea \u05e4\u05e8\u05d5\u05e4\u05d9\u05dc"
+    },
+    "bio": {
+      "type": "string",
+      "description": "\u05ea\u05d9\u05d0\u05d5\u05e8 \u05e7\u05e6\u05e8 \u05e2\u05dc \u05d4\u05de\u05e9\u05ea\u05de\u05e9"
+    },
+    "services_offered": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "\u05e9\u05d9\u05e8\u05d5\u05ea\u05d9\u05dd \u05d5\u05de\u05d5\u05e6\u05e8\u05d9\u05dd \u05e9\u05d4\u05de\u05e9\u05ea\u05de\u05e9 \u05de\u05e6\u05d9\u05e2"
+    },
+    "services_wanted": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "\u05e9\u05d9\u05e8\u05d5\u05ea\u05d9\u05dd \u05d5\u05de\u05d5\u05e6\u05e8\u05d9\u05dd \u05e9\u05d4\u05de\u05e9\u05ea\u05de\u05e9 \u05de\u05d7\u05e4\u05e9"
+    },
+    "interests": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "\u05ea\u05d7\u05d5\u05de\u05d9 \u05e2\u05e0\u05d9\u05d9\u05df \u05d5\u05ea\u05d7\u05d1\u05d9\u05d1\u05d9\u05dd"
+    },
+    "availability": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "\u05d1\u05e7\u05e8\u05d9\u05dd",
+          "\u05e6\u05d4\u05e8\u05d9\u05d9\u05dd",
+          "\u05e2\u05e8\u05d1\u05d9\u05dd",
+          "\u05e1\u05d5\u05e4\"\u05e9",
+          "\u05db\u05dc \u05d4\u05e9\u05d1\u05d5\u05e2"
+        ]
+      },
+      "description": "\u05d6\u05de\u05d9\u05e0\u05d5\u05ea \u05d4\u05de\u05e9\u05ea\u05de\u05e9"
+    },
+    "facebook_url": {
+      "type": "string",
+      "description": "\u05e7\u05d9\u05e9\u05d5\u05e8 \u05dc\u05e4\u05e8\u05d5\u05e4\u05d9\u05dc \u05e4\u05d9\u05d9\u05e1\u05d1\u05d5\u05e7"
+    },
+    "instagram_url": {
+      "type": "string",
+      "description": "\u05e7\u05d9\u05e9\u05d5\u05e8 \u05dc\u05e4\u05e8\u05d5\u05e4\u05d9\u05dc \u05d0\u05d9\u05e0\u05e1\u05d8\u05d2\u05e8\u05dd"
+    },
+    "rating": {
+      "type": "number",
+      "default": 0,
+      "description": "\u05d3\u05d9\u05e8\u05d5\u05d2 \u05de\u05de\u05d5\u05e6\u05e2 \u05e9\u05dc \u05d4\u05de\u05e9\u05ea\u05de\u05e9"
+    },
+    "total_ratings": {
+      "type": "number",
+      "default": 0,
+      "description": "\u05de\u05e1\u05e4\u05e8 \u05d4\u05d3\u05d9\u05e8\u05d5\u05d2\u05d9\u05dd \u05e9\u05e7\u05d9\u05d1\u05dc"
+    },
+    "verified": {
+      "type": "boolean",
+      "default": false,
+      "description": "\u05d4\u05d0\u05dd \u05d4\u05de\u05e9\u05ea\u05de\u05e9 \u05d0\u05d5\u05de\u05ea"
+    },
+    "max_distance": {
+      "type": "number",
+      "default": 20,
+      "description": "\u05d8\u05d5\u05d5\u05d7 \u05de\u05e8\u05d7\u05e7 \u05de\u05e7\u05e1\u05d9\u05de\u05dc\u05d9 \u05d1\u05e7\u05d9\u05dc\u05d5\u05de\u05d8\u05e8\u05d9\u05dd"
+    },
+    "phone": {
+      "type": "string",
+      "description": "\u05de\u05e1\u05e4\u05e8 \u05d8\u05dc\u05e4\u05d5\u05df"
+    },
+    "terms_accepted": {
+      "type": "boolean",
+      "default": false,
+      "description": "\u05d4\u05d0\u05dd \u05d4\u05de\u05e9\u05ea\u05de\u05e9 \u05d0\u05d9\u05e9\u05e8 \u05d0\u05ea \u05ea\u05e0\u05d0\u05d9 \u05d4\u05e9\u05d9\u05de\u05d5\u05e9"
+    },
+    "privacy_accepted": {
+      "type": "boolean",
+      "default": false,
+      "description": "\u05d4\u05d0\u05dd \u05d4\u05de\u05e9\u05ea\u05de\u05e9 \u05d0\u05d9\u05e9\u05e8 \u05d0\u05ea \u05de\u05d3\u05d9\u05e0\u05d9\u05d5\u05ea \u05d4\u05e4\u05e8\u05d8\u05d9\u05d5\u05ea"
+    },
+    "marketing_accepted": {
+      "type": "boolean",
+      "default": false,
+      "description": "\u05d4\u05d0\u05dd \u05d4\u05de\u05e9\u05ea\u05de\u05e9 \u05d0\u05d9\u05e9\u05e8 \u05e7\u05d1\u05dc\u05ea \u05d3\u05d9\u05d5\u05d5\u05e8 \u05e9\u05d9\u05d5\u05d5\u05e7\u05d9"
+    }
+  },
+  "required": [
+    "age",
+    "location",
+    "profile_image",
+    "services_offered",
+    "services_wanted",
+    "availability",
+    "phone"
+  ]
+}
